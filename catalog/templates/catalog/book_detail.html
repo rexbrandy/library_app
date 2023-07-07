@@ -3,10 +3,17 @@
 {% block content %}
 <h1>{{ book.title }}</h1>
 
-<p><strong>Author:</strong> <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
-<p><strong>Summary:</strong> {{ book.summary }}</p>
-<p><strong>Language:</strong> {{ book.language }}</p>
-<p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
-<br>
-<p><strong>Copies Available:</strong> {{ book.bookinstance_set.all.count }}</p>
+<div>
+  <p><strong>Author:</strong> <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
+  <p><strong>Summary:</strong> {{ book.summary }}</p>
+  <p><strong>Language:</strong> {{ book.language }}</p>
+  <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
+  <p><strong>Copies Available:</strong> {{ book.bookinstance_set.all.count }}</p>
+  <br>
+  {% if book.is_available %}
+  <input type="button" value="Borrow" id='borrowBook'>
+  {% else %}
+  <p>This book is out of stock.</p>
+  {% endif %}
+</div>
 {% endblock %}

@@ -1,6 +1,8 @@
-import re
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+import datetime
 import uuid
 
 class Language(models.Model):
@@ -54,12 +56,14 @@ class Book(models.Model):
     def display_genre(self):
         return ' '.join(genre.name for genre in self.genre.all()[:3])
 
+    def is_available(self):
+        return bool(self.bookinstance_set.all().count() > 0)
+
 
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
-    due_back = models.DateField(null=True, blank=True, help_text='Date due to be returned')
-    
+    book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
+
     LOAN_STATUS = (
         ('m', 'Maintence'),
         ('o', 'On loan'),
@@ -75,11 +79,24 @@ class BookInstance(models.Model):
         help_text='Book Availability'
     )
 
-    class Meta:
-        ordering = ['due_back']
-
     def __str__(self):
-        return f'{self.id} ({self.book.title})'
+        return f'{self.book.title} ({self.id}))'
 
     def display_book_title(self):
         return self.book.title
+
+class Loans(models.Model):
+    book = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)
+    user = models.OneToOneField(User, on_delete=models.RESTRICT)
+    due_back = models.DateField(
+        default= datetime.datetime.now() + datetime.timedelta(30), 
+        help_text='Date due to be returned'
+    )
+    returned_date = models.DateField(null=True, blank=True, help_text='Date book was returned')
+
+    @property
+    def is_overdue(self):
+        return bool(self.due_back and datetime.date.today() > self.due_back)
+    
+    def __str__(self):
+        return f'{self.book.title} - {self.user.username}'

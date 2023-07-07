@@ -6,15 +6,15 @@ admin.site.register(Language)
 
 @admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
-    list_display = ('display_book_title', 'due_back', 'status')
-    list_filter = ('status', 'due_back')
+    list_display = ('display_book_title', 'status')
+    list_filter = ('status',)
 
     fieldsets = (
         (None, {
             'fields': ('book', 'id')
         }),
         ('Availability', {
-            'fields': ('status', 'due_back')
+            'fields': ('status',)
         })
     )
 
