@@ -19,10 +19,19 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
-
+# Book Views
 class BookListView(generic.ListView):
     model = Book
     paginate_by = 1
 
 class BookDetailView(generic.DetailView):
     model = Book
+
+
+# Author Views
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 10
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
