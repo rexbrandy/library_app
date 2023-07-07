@@ -1,4 +1,6 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
+from django.views import generic
+
 from .models import Book, BookInstance, Author, Genre
 
 def index(request):
@@ -16,3 +18,11 @@ def index(request):
     }
 
     return render(request, 'index.html', context=context)
+
+
+class BookListView(generic.ListView):
+    model = Book
+    paginate_by = 1
+
+class BookDetailView(generic.DetailView):
+    model = Book
