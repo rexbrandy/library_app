@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from .models import Book, BookInstance, Author, Genre
+from .models import Book, BookInstance, Author, Loan
 
 def index(request):
     num_books = Book.objects.all().count()
@@ -35,3 +36,20 @@ class AuthorListView(generic.ListView):
 
 class AuthorDetailView(generic.DetailView):
     model = Author
+
+class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
+    model = Loan
+    template_name = 'catalog/borrowed_books.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return (
+            Loan.objects.filter(user=self.request.user)
+            .filter(returned_date__isnull=True)
+        )
+
+class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
+    permission_required = 'catalog.can_mark_returned'
+
+    model = Loan
+    template_name = 'catalog/all_borrowed_books.html'

@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Author, Genre, Book, BookInstance, Language
+from .models import Author, Genre, Book, BookInstance, Language, Loan
 
 admin.site.register(Genre)
 admin.site.register(Language)
+admin.site.register(Loan)
 
 @admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):

@@ -85,9 +85,9 @@ class BookInstance(models.Model):
     def display_book_title(self):
         return self.book.title
 
-class Loans(models.Model):
-    book = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)
-    user = models.OneToOneField(User, on_delete=models.RESTRICT)
+class Loan(models.Model):
+    book_instance = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)
+    user = models.ForeignKey(User, on_delete=models.RESTRICT)
     due_back = models.DateField(
         default= datetime.datetime.now() + datetime.timedelta(30), 
         help_text='Date due to be returned'
@@ -99,4 +99,11 @@ class Loans(models.Model):
         return bool(self.due_back and datetime.date.today() > self.due_back)
     
     def __str__(self):
-        return f'{self.book.title} - {self.user.username}'
+        return f'{self.book_instance.book.title} - {self.user.username}'
+
+    def set_returned(self):
+        if not self.returned_date:
+            self.returned_date = datetime.date.today()
+
+    class Meta:
+        permissions = (('can_mark_returned', 'Set loan as returned'),)
