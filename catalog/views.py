@@ -35,6 +35,18 @@ class BookListView(generic.ListView):
 class BookDetailView(generic.DetailView):
     model = Book
 
+class BookCreate(generic.edit.CreateView):
+    model = Book
+    fields = '__all__'
+
+class BookUpdate(generic.edit.UpdateView):
+    model = Book
+    fields = '__all__'
+
+class BookDelete(generic.edit.DeleteView):
+    model = Book
+    success_url = reverse_lazy('books')
+
 
 ################
 # AUTHOR VIEWS
