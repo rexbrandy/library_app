@@ -88,6 +88,10 @@ class BookInstance(models.Model):
 class Loan(models.Model):
     book_instance = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)
     user = models.ForeignKey(User, on_delete=models.RESTRICT)
+    date = models.DateField(
+        default=datetime.datetime.now(),
+        help_text='Date borrowed'
+    )
     due_back = models.DateField(
         default= datetime.datetime.now() + datetime.timedelta(30), 
         help_text='Date due to be returned'
@@ -101,7 +105,7 @@ class Loan(models.Model):
     def __str__(self):
         return f'{self.book_instance.book.title} - {self.user.username}'
 
-    def set_returned(self):
+    def set_returned_to_now(self):
         if not self.returned_date:
             self.returned_date = datetime.date.today()
 

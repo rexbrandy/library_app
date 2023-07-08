@@ -29,9 +29,11 @@
                 <li>User: {{ user.get_username }}</li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 <li><a href="{% url 'loans' %}">Borrowed</a></li>
-                <li><a href="{% url 'all_loans' %}">All Borrowed</a></li>
-                {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
+                {% if perms.catalog.can_mark_returned %}
+                  <li><a href="{% url 'all-loans' %}">All Borrowed</a></li>
+                {% endif %}
+              {% else %}
+              <li><a href="{% url 'login' %}">Login</a></li>
               {% endif %}
             </ul>
           {% endblock %}
