@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.utils import timezone as django_timezone
 
 import datetime
 import uuid
@@ -15,7 +16,7 @@ class Language(models.Model):
 class Author(models.Model):
     first_name = models.CharField(max_length=100, help_text='Enter Author first name.')
     last_name = models.CharField(max_length=100, help_text='Enter Author last name.')
-    date_of_birth = models.DateField(null=True, blank=True, help_text='Enter Author date of birth.')
+    date_of_birth = models.DateField('Born', null=True, blank=True, help_text='Enter Author date of birth.')
 
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -89,11 +90,11 @@ class Loan(models.Model):
     book_instance = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)
     user = models.ForeignKey(User, on_delete=models.RESTRICT)
     date = models.DateField(
-        default=datetime.datetime.now(),
+        default=django_timezone.now,
         help_text='Date borrowed'
     )
     due_back = models.DateField(
-        default= datetime.datetime.now() + datetime.timedelta(30), 
+        default= django_timezone.now() + datetime.timedelta(30), 
         help_text='Date due to be returned'
     )
     returned_date = models.DateField(null=True, blank=True, help_text='Date book was returned')
