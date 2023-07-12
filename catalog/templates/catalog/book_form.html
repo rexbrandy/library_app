@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
   <div class="col-12">
-    <h1 class="display-1"><strong>Update: {{ book.title }}</strong></h1>
+    <h1 class="display-1"><strong>Update Book</strong></h1>
   </div>
 </div>
 <div class="row">
@@ -11,26 +11,16 @@
     {% load static %}
     <img src="{% static 'assets/book_placeholder.png'%}" style="max-width: inherit;">
   </div>
-
+  
   <div class="col-9">
-    {{ form.fields.genre.choices }}
+    <form action="" method="post">
+      {% include 'form_snippet.html' %}
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
-
-    {% for a, b in form.fields.genre.choices %}
-      <p>
-        {{ a }} - {{ b }}
-      </p>
+    {% for book_instance in book.bookinstance_set.all %}
+    <p>{{ book_instance }}</p>
     {% endfor %}
-
-    <div class="mb-3">
-      <label for="title" class="form-label">{{ form.title.label }}</label>
-      <div class="input-group">
-        <input class="form-input" type="text" name="{{ form.title.name }}" id="title" value="{{ form.title.value }}">
-      </div>
-    </div>
-
-  </div>
-
   </div>
 </div>
 {% endblock %}

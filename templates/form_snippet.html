@@ -1,0 +1,13 @@
+{% load widget_tweaks %}
+
+{% for field in form %}
+<div class="mb-3">
+  {{ field.label_tag }}
+  <div class="input-group">
+    {% render_field field class="form-control" %}
+  </div>
+  {% if field.help_text %}
+  <small class="form-text text-muted">{{ field.help_text }}</small>
+{% endif %}
+</div>
+{% endfor %}

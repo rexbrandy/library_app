@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="" method='post'>
-  {% csrf_token %}
-  <table>
-    {{form.as_table}}
-  </table>
-  <input type="submit" value="Submit">
-</form>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-1"><strong>Update Author</strong></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-9 col-">
+    <form action="" method="post">
+      {% include 'form_snippet.html' %}
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
