@@ -1,11 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="" method='post'>
-  {% csrf_token %}
-  <table>
-    {{form.as_table}}
-  </table>
-  <input type="submit" value="Submit">
-</form>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-1"><strong>Update: {{ book.title }}</strong></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-3">
+    {% load static %}
+    <img src="{% static 'assets/book_placeholder.png'%}" style="max-width: inherit;">
+  </div>
+
+  <div class="col-9">
+    {{ form.fields.genre.choices }}
+
+
+    {% for a, b in form.fields.genre.choices %}
+      <p>
+        {{ a }} - {{ b }}
+      </p>
+    {% endfor %}
+
+    <div class="mb-3">
+      <label for="title" class="form-label">{{ form.title.label }}</label>
+      <div class="input-group">
+        <input class="form-input" type="text" name="{{ form.title.name }}" id="title" value="{{ form.title.value }}">
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+</div>
 {% endblock %}

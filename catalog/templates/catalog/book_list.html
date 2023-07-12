@@ -1,14 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Book List</h1>
-  <ul>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-1"><strong>Books</strong></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+
     {% for book in book_list %}
-    <li>
-      <a href="{{ book.get_absolute_url }}">{{ book.title }}</a>
-    </li>
+
+      <div class="row pb-2">
+        <div class="card d-flex" style="flex-direction: row; max-height: 30vh;">
+          {% load static %}
+          <img class="card-img" src="{% static 'assets/book_placeholder.png' %}" style="width: 10rem;">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a class="link" href="{{ book.get_absolute_url }}" style="color: black;">{{ book.title }}</a>
+              -
+              <a class="link" href="{{ book.author.get_absolute_url }}" style="color: rgb(90, 90, 90);"><small>{{ book.author }}</small></a>
+            </h5>
+            <p class="card-text" style="max-height: 60%;">
+              {{ book.summary|slice:":200" }}...
+            </p>
+            <div class="card-footer bg-transparent border-0 p-0">
+              <a href="#" class="btn btn-secondary">Add to wishlist</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     {% empty %}
-    <p>Library is empty</p>
+
+      <p>Library is empty</p>
+
     {% endfor %}
-  </ul>
+
+  </div>
+</div>
 {% endblock %}

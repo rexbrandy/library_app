@@ -1,19 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{ book.title }}</h1>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-1"><strong>{{ book.title }}</strong></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-3">
+    {% load static %}
+    <img src="{% static 'assets/book_placeholder.png'%}" style="max-width: inherit;">
+  </div>
 
-<div>
-  <p><strong>Author:</strong> <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
-  <p><strong>Summary:</strong> {{ book.summary }}</p>
-  <p><strong>Language:</strong> {{ book.language }}</p>
-  <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
-  <p><strong>Copies Available:</strong> {{ book.bookinstance_set.all.count }}</p>
-  <br>
-  {% if book.is_available %}
-  <input type="button" value="Borrow" id='borrowBook'>
-  {% else %}
-  <p>This book is out of stock.</p>
-  {% endif %}
+  <div class="col-9">
+    <p><strong>Author:</strong> <a class='link' style="color: rgb(90, 90, 90);" href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
+    <p><strong>Summary:</strong> {{ book.summary }}</p>
+    <p><strong>Language:</strong> {{ book.language }}</p>
+    <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
+    <p><strong>Copies Available:</strong> {{ book.bookinstance_set.all.count }}</p>
+    <br>
+    {% if perms.catalog.can_mark_returned %}
+    <a href="{% url 'book-update' book.pk %}" class="btn btn-link">Edit</a>
+    {% endif %}
+  </div>
+
+  </div>
 </div>
 {% endblock %}
