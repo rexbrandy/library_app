@@ -5,6 +5,7 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.forms import modelformset_factory
 
 from .forms import RenewBookForm
 from .models import Book, BookInstance, Author, Loan
@@ -42,6 +43,14 @@ class BookCreate(generic.edit.CreateView):
 class BookUpdate(generic.edit.UpdateView):
     model = Book
     fields = '__all__'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        book_instance_formset = modelformset_factory(BookInstance, extra=1, fields=['status'])
+
+        context['book_instance_formset'] = book_instance_formset
+        return context
+
 
 class BookDelete(generic.edit.DeleteView):
     model = Book
