@@ -57,14 +57,13 @@
 {% block scripts %}
 <script>
 function showFields(id) {
-  console.log(id)
+  console.log(this)
   document.getElementById(id+"_display").style.display="none";
 
   document.getElementById(id+"_input").style.display="table-row";
 }
 
 function saveChanges(id) {
-  console.log(id)
   document.getElementById(id+"_input").style.display="none";
 
   document.getElementById(id+"_display").style.display="table-row";
