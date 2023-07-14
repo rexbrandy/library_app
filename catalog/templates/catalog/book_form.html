@@ -34,18 +34,25 @@
             </tr>
           </thead>
           <tbody>
-            {% for book_instance in book.bookinstance_set.all %}
-            <tr id="{{ forloop.counter }}_display">
-              <th scope="row">{{ book_instance.id }}</th>
-              <td>{{ book_instance.get_status_display }}</td>
-              <td><button class="btn btn-link p-0" onclick="showFields({{ forloop.counter }})">Edit</button></td>
-            </tr>
-            <tr id="{{ forloop.counter }}_input" style="display: none;">
-              <th scope="row">{{ book_instance.id }}</th>
-              <td><input type="text" name="" id=""></td>
-              <td><button class="btn btn-link p-0" onclick="saveChanges({{ forloop.counter }})">Save</button></td>
+            {% load widget_tweaks %}
+            {{ formset.management_form }}
+            {% for book_instance_form in book_instance_formset %}
+            
+            <tr>
+              <th scope="row">{{ book_instance_form.id.value }}</th>
+              <td>{% render_field book_instance_form.status class='form-control' %}</td>
+              <td>
+                <button class="btn btn-link p-0" 
+                onclick="saveChanges(
+                  '{{ book_instance_form.status.id_for_label }}',
+                  '{{ book_instance_form.id.value}}')"
+                >
+                  Save
+                </button>
+              </td>
             </tr>
             {% endfor %}
+
           </tbody>
         </table>
       </div>
@@ -56,17 +63,8 @@
 
 {% block scripts %}
 <script>
-function showFields(id) {
-  console.log(this)
-  document.getElementById(id+"_display").style.display="none";
-
-  document.getElementById(id+"_input").style.display="table-row";
-}
-
-function saveChanges(id) {
-  document.getElementById(id+"_input").style.display="none";
-
-  document.getElementById(id+"_display").style.display="table-row";
-}
+  function saveChanges(status_value, id) {
+    console.log(status_value, id)
+  }
 </script>
 {% endblock %}

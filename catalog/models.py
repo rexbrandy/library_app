@@ -85,6 +85,14 @@ class BookInstance(models.Model):
 
     def display_book_title(self):
         return self.book.title
+    
+    def get_loan_status(self):
+        return (
+            ('m', 'Maintence'),
+            ('o', 'On loan'),
+            ('a', 'Available'),
+            ('r', 'Reserved'),
+        )
 
 class Loan(models.Model):
     book_instance = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)

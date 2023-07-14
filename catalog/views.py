@@ -46,7 +46,7 @@ class BookUpdate(generic.edit.UpdateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        book_instance_formset = modelformset_factory(BookInstance, extra=1, fields=['status'])
+        book_instance_formset = modelformset_factory(BookInstance, extra=0, fields=['id','status'])
 
         context['book_instance_formset'] = book_instance_formset
         return context
