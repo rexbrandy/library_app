@@ -48,9 +48,11 @@ class BookUpdate(generic.edit.UpdateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['id','status', 'book'])
 
-        context['book_instance_formset'] = BookInstanceFormset
+        book_instances_qs = BookInstance.objects.all().filter(book=self.kwargs['pk'])
+        BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['status', 'book'])
+        context['book_instance_formset'] = BookInstanceFormset(queryset=book_instances_qs)
+
         return context
 
     def post(self, request, **kwargs):
@@ -61,15 +63,11 @@ class BookUpdate(generic.edit.UpdateView):
             BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['id','status'])
             formset = BookInstanceFormset(request.POST)
 
-            print(formset.cleaned_data)
-
-            book_id = formset.cleaned_data['book_id']
-
             if formset.is_valid():
                 for form in formset:
                     form.save()
             
-                return redirect('book-detail', pk=book_id)
+                return redirect('book-detail', self.kwargs['pk'])
 
 
 
