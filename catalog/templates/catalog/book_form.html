@@ -13,19 +13,26 @@
   </div>
   
   <div class="col-9">
+
     <div class="row">
-      <form action="" method="post">
+      <form action="" method="post ">
+        <input type="hidden" name="which_form" value="book_form">
         {% csrf_token %}
         {% include 'form_snippet.html' %}
         <div class="mb-3 text-end">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary">Save book</button>
         </div>
       </form>
     </div>
+
     <div class="row">
-      <h3>Book Copies</h3>
-      <div class="pl-1">
-        <table class="table table-hover" style="padding-left: 12;">
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ book_instance_formset.management_form }}
+        <input type="hidden" name="book_id" value="{{ form.instance.id }}">
+        <input type="hidden" name="which_form" value="book_instance_form">
+        <table class="table table-hover table-borderless caption-top" style="padding-left: 12;">
+          <caption class="h5" style="font-weight: normal;">Book copies</caption>
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -34,28 +41,32 @@
             </tr>
           </thead>
           <tbody>
-            {% load widget_tweaks %}
-            {{ formset.management_form }}
-            {% for book_instance_form in book_instance_formset %}
-            
-            <tr>
-              <th scope="row">{{ book_instance_form.id.value }}</th>
-              <td>{% render_field book_instance_form.status class='form-control' %}</td>
-              <td>
-                <button class="btn btn-link p-0" 
-                onclick="saveChanges(
-                  '{{ book_instance_form.status.id_for_label }}',
-                  '{{ book_instance_form.id.value}}')"
-                >
-                  Save
-                </button>
-              </td>
-            </tr>
-            {% endfor %}
 
+              {% load widget_tweaks %}
+              {% for book_instance_form in book_instance_formset %}
+              <tr>
+                <th scope="row">{{ book_instance_form.id.value }}</th>
+                <td>
+                  {% render_field book_instance_form.id hidden=True %}              
+                  {% render_field book_instance_form.status class='form-control' %}
+                </td>
+                <td>
+                  <button>
+                    View
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
           </tbody>
+          <tfoot>
+            <tr>
+              <td><button class="btn btn-link">Add new row</button></td>
+              <td></td>
+              <td><input class="btn btn-primary" type="submit" value="Save changes"></td>
+            </tr>
+          </tfoot>
         </table>
-      </div>
+      </form>
     </div>
   </div>
 </div>
@@ -64,7 +75,9 @@
 {% block scripts %}
 <script>
   function saveChanges(status_value, id) {
-    console.log(status_value, id)
+    console.log(status_value, id);
+
+    
   }
 </script>
 {% endblock %}

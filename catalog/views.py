@@ -1,5 +1,6 @@
 import datetime
-from django.shortcuts import render, get_object_or_404
+import re
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -9,6 +10,7 @@ from django.forms import modelformset_factory
 
 from .forms import RenewBookForm
 from .models import Book, BookInstance, Author, Loan
+from catalog import forms
 
 def index(request):
     num_books = Book.objects.all().count()
@@ -46,10 +48,33 @@ class BookUpdate(generic.edit.UpdateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        book_instance_formset = modelformset_factory(BookInstance, extra=0, fields=['id','status'])
+        BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['id','status', 'book'])
 
-        context['book_instance_formset'] = book_instance_formset
+        context['book_instance_formset'] = BookInstanceFormset
         return context
+
+    def post(self, request, **kwargs):
+        if request.POST['which_form'] == 'book_form':
+            pass
+
+        elif request.POST['which_form'] == 'book_instance_form':
+            BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['id','status'])
+            formset = BookInstanceFormset(request.POST)
+
+            print(formset.cleaned_data)
+
+            book_id = formset.cleaned_data['book_id']
+
+            if formset.is_valid():
+                for form in formset:
+                    form.save()
+            
+                return redirect('book-detail', pk=book_id)
+
+
+
+
+
 
 
 class BookDelete(generic.edit.DeleteView):
