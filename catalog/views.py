@@ -46,28 +46,32 @@ class BookUpdate(generic.edit.UpdateView):
     model = Book
     fields = '__all__'
 
-    def get_context_data(self):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data()
 
         book_instances_qs = BookInstance.objects.all().filter(book=self.kwargs['pk'])
-        BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['status', 'book'])
+        BookInstanceFormset = modelformset_factory(BookInstance, extra=0, can_delete=True, fields=['status', 'id'])
+
+        #if self.request.POST:
+        #    context['book_instance_formset'] = BookInstanceFormset(self.request.POST, queryset=book_instances_qs)
+        #else:
         context['book_instance_formset'] = BookInstanceFormset(queryset=book_instances_qs)
 
         return context
 
     def post(self, request, **kwargs):
-        if request.POST['which_form'] == 'book_form':
-            pass
+        BookInstanceFormset = modelformset_factory(BookInstance, extra=0, can_delete=True, fields=['status', 'id'])
+        formset = BookInstanceFormset(request.POST)
 
-        elif request.POST['which_form'] == 'book_instance_form':
-            BookInstanceFormset = modelformset_factory(BookInstance, extra=0, fields=['id','status'])
-            formset = BookInstanceFormset(request.POST)
-
-            if formset.is_valid():
-                for form in formset:
+        print(formset.is_valid())
+        print(formset.errors)
+        if formset.is_valid():
+            for form in formset:
+                print(form.is_valid())
+                if form.is_valid():
                     form.save()
-            
-                return redirect('book-detail', self.kwargs['pk'])
+        
+        return super(BookUpdate, self).post(request, **kwargs)
 
 
 

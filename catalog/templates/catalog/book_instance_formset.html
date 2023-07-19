@@ -1,0 +1,54 @@
+<table class="table table-hover table-borderless caption-top" style="padding-left: 12;" id='bookInstaneTable'>
+    <caption class="h5" style="font-weight: normal;">Book copies</caption>
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col" style="width: 30%;">Status</th>
+        <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ book_instance_formset.management_form }}
+    {% load widget_tweaks %}
+    {% for book_instance_form in book_instance_formset %}
+    <tr id='book_instance_tr_{{ forloop.counter }}'>
+        <th scope="row">{{ book_instance_form.id.value }}</th>
+        <td>
+          {% render_field book_instance_form.id hidden=True %}              
+          {% if book_instance_form.status.value == 'o' %}
+            {% render_field book_instance_form.status hidden=True %}              
+            {% render_field book_instance_form.status class='form-control' disabled=True %}
+          {% else %}
+            {% render_field book_instance_form.status class='form-control' %}
+          {% endif %}
+        </td>
+        <td style="vertical-align: middle; padding-left: 18px;" >
+          {% if book_instance_formset.can_delete and book_instance_form.status.value != 'o'%}
+            {% render_field book_instance_form.DELETE class='form-check-input' %}
+          {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td><button type="button" class="btn btn-link" onclick="addBookInstance()">Add new row</button></td>
+        <td></td>
+        <td><input class="btn btn-primary" type="submit" value="Save changes"></td>
+    </tr>
+    </tfoot>
+</table>
+
+{% block scripts %}
+<script>
+  function addBookInstance() {
+    total_forms = document.getElementById('id_form-TOTAL_FORMS');
+    my_table = document.getElementById('bookInstanceTable');
+    row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
+
+    console.log(row);
+    console.log(row.querySelectorAll('.initial-form-2-id_form-2-id'));
+
+  }
+</script>
+{% endblock %}

@@ -60,6 +60,9 @@ class Book(models.Model):
     def is_available(self):
         return bool(self.bookinstance_set.all().count() > 0)
 
+    def copies_available(self):
+        return self.bookinstance_set.filter(status__exact='a').count()
+
 
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
