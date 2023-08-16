@@ -73,12 +73,6 @@ class BookUpdate(generic.edit.UpdateView):
         
         return super(BookUpdate, self).post(request, **kwargs)
 
-
-
-
-
-
-
 class BookDelete(generic.edit.DeleteView):
     model = Book
     success_url = reverse_lazy('books')

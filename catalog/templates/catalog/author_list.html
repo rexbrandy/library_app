@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Authors</h1>
-  <ul>
-    {% for author in author_list %}
-    <li>
-      <a href="{{ author.get_absolute_url }}">{{ author.first_name }} {{ author.last_name }}</a>
-    </li>
-    {% empty %}
-    <p>Library is empty</p>
-    {% endfor %}
-  </ul>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-1"><strong>Authors</strong></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <table class="table table-striped">
+      <tbody>
+      {% for author in author_list %}
+      <tr>
+        <td><a href="{{ author.get_absolute_url }}">{{ author.first_name }} {{ author.last_name }}</a></td>
+      </tr>
+      {% empty %}
+      <p>Library is empty</p>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
