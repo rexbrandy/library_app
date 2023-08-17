@@ -16,7 +16,9 @@ class Language(models.Model):
 class Author(models.Model):
     first_name = models.CharField(max_length=100, help_text='Enter Author first name.')
     last_name = models.CharField(max_length=100, help_text='Enter Author last name.')
+    country = models.CharField(max_length=50, null=True, blank=True)
     date_of_birth = models.DateField('Born', null=True, blank=True, help_text='Enter Author date of birth.')
+    date_of_deatH = models.DateField('Died', null=True, blank=True, help_text='Enter Author date of death.')
 
     class Meta:
         ordering = ['last_name', 'first_name']
@@ -24,6 +26,22 @@ class Author(models.Model):
     def get_absolute_url(self):
         return reverse('author-detail', args=[str(self.id)])
 
+    @property
+    def number_of_books(self):
+        return len(self.book_set.all())
+
+    @property
+    def dob_year(self):
+        return self.date_of_birth.year
+
+    @property
+    def dod_year(self):
+        return self.date_of_death.year
+
+    @property
+    def distinct_genres(self):
+        return self.books_set
+    
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 

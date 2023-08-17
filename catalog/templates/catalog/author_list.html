@@ -8,17 +8,27 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <table class="table table-striped">
-      <tbody>
-      {% for author in author_list %}
-      <tr>
-        <td><a href="{{ author.get_absolute_url }}">{{ author.first_name }} {{ author.last_name }}</a></td>
-      </tr>
-      {% empty %}
-      <p>Library is empty</p>
-      {% endfor %}
-      </tbody>
-    </table>
+    {% for author in author_list %}
+
+      <div class="card mb-2">
+        <div class="card-body">
+          <h4 class="card-title"><a href="{{ author.get_absolute_url }}"  style="text-decoration: none; color: #000;">{{ author.first_name }} {{ author.last_name }}</a></h4>
+          {% if author.date_of_death %}
+          <h6 class="card-subtitle mb-2 text-muted">{{ author.dob_year }} - {{ author.dod_year }}</h6>
+          {% else %}
+          <h6 class="card-subtitle mb-2 text-muted">{{ author.dob_year }} - current</h6>
+          {% endif %}
+
+          <p class="card-text">
+            <bold>{{ author.number_of_books }} books</bold> about {% for genre in author.all_genres %}{{ genre }}, {% endfor %}
+          </p>
+        </div>
+      </div>
+
+      
+    {% empty %}
+    <p>Library is empty</p>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}
