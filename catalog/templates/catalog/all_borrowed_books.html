@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
 
+{% block page_heading %}All Loans{% endblock %}
+
 {% block content %}
-<div class="row">
-  <div class="col-12">
-    <h1 class="display-1"><strong>All Loans</strong></h1>
-  </div>
-</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+
+
+
 {% if loan_list %}
   <ul>
     {% for loan in loan_list %}

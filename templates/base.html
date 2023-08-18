@@ -49,10 +49,13 @@
               <a href="{% url 'all-loans' %}" class="nav-link text-white fs-5">Admin</a>
               <ul class="nav flex-column mb-auto" style="">
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
-                  <a href="" class="nav-link text-white">Catalog</a>
+                  <a href="" class="nav-link text-white">Books</a>
                 </li>
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
-                  <a href="" class="nav-link text-white">Loans</a>
+                  <a href="" class="nav-link text-white">Users</a>
+                </li>
+                <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
+                  <a href="" class="nav-link text-white">Loan</a>
                 </li>
               </ul>
             </li>
@@ -74,10 +77,15 @@
       </div>
       {% endblock %}
 
-      <div class="container" style="margin-left: 200px;">
+      <div class="container" style="margin-left: 200px;">    
         <div class="row">
-          <div class="col-sm-10 ">
-            
+          <div class="col-12">
+            <h1 class="display-1"><strong>{% block page_heading %}{% endblock %}</strong></h1>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-10">
 
             {% block content %}{% endblock %}
 
