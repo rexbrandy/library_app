@@ -52,9 +52,6 @@ class BookUpdate(generic.edit.UpdateView):
         book_instances_qs = BookInstance.objects.all().filter(book=self.kwargs['pk'])
         BookInstanceFormset = modelformset_factory(BookInstance, extra=0, can_delete=True, fields=['status', 'id'])
 
-        #if self.request.POST:
-        #    context['book_instance_formset'] = BookInstanceFormset(self.request.POST, queryset=book_instances_qs)
-        #else:
         context['book_instance_formset'] = BookInstanceFormset(queryset=book_instances_qs)
 
         return context
@@ -63,8 +60,6 @@ class BookUpdate(generic.edit.UpdateView):
         BookInstanceFormset = modelformset_factory(BookInstance, extra=0, can_delete=True, fields=['status', 'id'])
         formset = BookInstanceFormset(request.POST)
 
-        print(formset.is_valid())
-        print(formset.errors)
         if formset.is_valid():
             for form in formset:
                 print(form.is_valid())

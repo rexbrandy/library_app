@@ -20,7 +20,7 @@
           {% endif %}
 
           <p class="card-text">
-            <bold>{{ author.number_of_books }} books</bold> about {% for genre in author.all_genres %}{{ genre }}, {% endfor %}
+            <bold>{{ author.number_of_books }} books</bold> about {% for genre in author.distinct_genres %}{{ genre }}, {% endfor %}
           </p>
         </div>
       </div>

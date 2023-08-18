@@ -1,3 +1,4 @@
+from tkinter import FLAT
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -12,6 +13,13 @@ class Language(models.Model):
 
     def __str__(self):
         return f'({self.language_code}) {self.name}'
+
+class Genre(models.Model):
+    name = models.CharField(max_length=100, help_text='Enter genre name.')
+
+    def __str__(self):
+        return self.name
+
 
 class Author(models.Model):
     first_name = models.CharField(max_length=100, help_text='Enter Author first name.')
@@ -40,17 +48,11 @@ class Author(models.Model):
 
     @property
     def distinct_genres(self):
-        return self.books_set
+        pks = self.book_set.all().values_list('genre__pk', flat=True)
+        return Genre.objects.filter(pk__in=pks).distinct()
     
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
-
-
-class Genre(models.Model):
-    name = models.CharField(max_length=100, help_text='Enter genre name.')
-
-    def __str__(self):
-        return self.name
 
 
 class Book(models.Model):
