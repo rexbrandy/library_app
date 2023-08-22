@@ -8,13 +8,16 @@ import datetime
 import uuid
 
 class Language(models.Model):
-    language_code = models.CharField(max_length=6, help_text='Enter language code e.g. ("en" for "English")')
+    "Langauge code and language name according to ISO 639-1"
+    language_code = models.CharField(max_length=6, help_text='Enter 2 letter language code e.g. ("en" for "English")')
     name = models.CharField(max_length=64, help_text='Enter language name e.g. English')
 
     def __str__(self):
+        
         return f'({self.language_code}) {self.name}'
 
 class Genre(models.Model):
+    "Book genre"
     name = models.CharField(max_length=100, help_text='Enter genre name.')
 
     def __str__(self):
@@ -26,7 +29,7 @@ class Author(models.Model):
     last_name = models.CharField(max_length=100, help_text='Enter Author last name.')
     country = models.CharField(max_length=50, null=True, blank=True)
     date_of_birth = models.DateField('Born', null=True, blank=True, help_text='Enter Author date of birth.')
-    date_of_deatH = models.DateField('Died', null=True, blank=True, help_text='Enter Author date of death.')
+    date_of_death = models.DateField('Died', null=True, blank=True, help_text='Enter Author date of death.')
 
     class Meta:
         ordering = ['last_name', 'first_name']

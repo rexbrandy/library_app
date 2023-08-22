@@ -99,6 +99,10 @@ class AuthorDelete(generic.edit.DeleteView):
 ##############
 # LOAN VIEWS 
 #
+class LoanCreate(LoginRequiredMixin, generic.edit.CreateView):
+    model = Loan
+    fields = ['user', 'book_instance']
+
 class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     model = Loan
     template_name = 'catalog/borrowed_books.html'
@@ -110,6 +114,7 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
             .filter(returned_date__isnull=True)
         )
 
+
 class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
     permission_required = 'catalog.can_mark_returned'
 
@@ -117,6 +122,7 @@ class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
     paginate_by = 10
 
     template_name = 'catalog/all_borrowed_books.html'
+
 
 @login_required
 @permission_required('catalog.can_mark_returned', raise_exception=True)
