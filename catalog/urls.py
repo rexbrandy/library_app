@@ -22,4 +22,5 @@ urlpatterns = [
     path('all_loans/', views.LoanedBooksByAllListView.as_view(), name='all-loans'),
     path('loan/create', views.LoanCreate.as_view(), name='loan-create'),
 
+    path('ajax/users', views.user_search, name='ajax-users'),
 ]

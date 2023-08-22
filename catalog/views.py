@@ -149,3 +149,12 @@ def renew_loan_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', context=context)
     
+############
+# AJAX VIEWS
+#
+
+def user_search(request):
+    if request.is_ajax and request.method == 'POST':
+       print(request.post)
+    
+    

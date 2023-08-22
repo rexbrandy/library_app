@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from catalog.models import Loan
+from catalog.models import Loan, User, BookInstance
 
 class RenewBookForm(forms.ModelForm):
     def clean_due_back(self):
@@ -23,3 +23,9 @@ class RenewBookForm(forms.ModelForm):
         fields = ['due_back']
         labels = {'due_back': _('Renewal date')}
         help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 1)')}
+
+
+class LoanForm(forms.Form):
+    class Meta:
+        model = Loan
+        fields = ['user', 'book_instance']
