@@ -21,6 +21,11 @@
               {{ book.summary|slice:":200" }}...
             </p>
             <div class="card-footer bg-transparent border-0 p-0">
+              {% if user.is_authenticated and book.is_available %}
+              <a href="{% url 'loan-create' book.id %}" class="btn btn-primary">Loan</a>
+              {% else %}
+              <a href="" class="btn btn-secondary" disabled>Unavailable</a>
+              {% endif %}
               <a href="#" class="btn btn-secondary">Add to wishlist</a>
             </div>
           </div>

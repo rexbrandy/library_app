@@ -5,36 +5,13 @@
 {% block content %}
 <div class="row">
   <div class="col-5">
-    <div class="mb-3">
-      <label for="user" class="form-label">Borrower</label>
-      <input type="text" class="form-control" id="user_input" placeholder="Enter Username or ID" onchange="search_users()">
-    </div>
-    <div>
-
-    </div>
-  </div>
-  <div class="col-5">
-
+    <form action="" method="post"  enctype="multipart/form-data" novalidate>
+      {% csrf_token %} 
+      <div class="row mb-3">
+        {% include 'form_snippet.html' %}
+      </div>
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
   </div>
 </div>
-{% endblock %}
-
-{% block javascript %}
-<script>
-  function search_users(){
-    var user_input = document.getElementById('user_input').serialize();
-
-    $.ajax({
-      type: 'POST',
-      url: '{% url "ajax-users" }',
-      data: user_input,
-      success: function(e) {
-        console.log(e);
-      },
-      error: function(e) {
-        console.log(e);
-      }
-    })
-  }
-</script>
 {% endblock %}

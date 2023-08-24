@@ -17,10 +17,8 @@ urlpatterns = [
     path('author/<int:pk>/update', views.AuthorUpdate.as_view(), name='author-update'),
     path('author/<int:pk>/delete', views.AuthorDelete.as_view(), name='author-delete'),
 
-    path('my_loans/', views.LoanedBooksByUserListView.as_view(), name='my-loans'),
+    path('loan/my_loans/', views.LoanedBooksByUserListView.as_view(), name='my-loans'),
     path('loan/<int:pk>/renew/', views.renew_loan_librarian, name='renew-loan-librarian'),
-    path('all_loans/', views.LoanedBooksByAllListView.as_view(), name='all-loans'),
-    path('loan/create', views.LoanCreate.as_view(), name='loan-create'),
-
-    path('ajax/users', views.user_search, name='ajax-users'),
+    path('loan/all_loans/', views.LoanedBooksByAllListView.as_view(), name='all-loans'),
+    path('loan/create/<int:book_pk>', views.LoanCreate.as_view(), name='loan-create'),
 ]

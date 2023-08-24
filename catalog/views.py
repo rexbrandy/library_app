@@ -1,6 +1,6 @@
 import datetime
-import re
-from django.shortcuts import render, get_object_or_404, redirect
+
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -8,9 +8,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import modelformset_factory
 
-from .forms import RenewBookForm
+from .forms import RenewBookForm, LoanForm
 from .models import Book, BookInstance, Author, Loan
-from catalog import forms
 
 def index(request):
     num_books = Book.objects.all().count()
@@ -103,6 +102,19 @@ class LoanCreate(LoginRequiredMixin, generic.edit.CreateView):
     model = Loan
     fields = ['user', 'book_instance']
 
+    def get_context_data(self, **kwargs):
+        book_pk = self.kwargs['book_pk']
+
+        context = super().get_context_data()
+        book = Book.objects.get(pk=book_pk)
+
+        if book.is_available():
+            book_instance = book.get_available_copy()
+            print(book_instance.pk)
+
+        return context
+
+
 class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     model = Loan
     template_name = 'catalog/borrowed_books.html'
@@ -122,6 +134,10 @@ class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
     paginate_by = 10
 
     template_name = 'catalog/all_borrowed_books.html'
+
+def loan_create(request):
+    if request.method == 'POST':
+        form = LoanForm(request.POST)
 
 
 @login_required
@@ -148,13 +164,3 @@ def renew_loan_librarian(request, pk):
     }
 
     return render(request, 'catalog/book_renew_librarian.html', context=context)
-    
-############
-# AJAX VIEWS
-#
-
-def user_search(request):
-    if request.is_ajax and request.method == 'POST':
-       print(request.post)
-    
-    

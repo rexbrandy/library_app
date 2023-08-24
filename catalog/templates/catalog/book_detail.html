@@ -16,6 +16,9 @@
     <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
     <p><strong>Copies Available:</strong> {{ book.copies_available }}</p>
     <br>
+    {% if user.is_authenticated %}
+    <a href="{% url 'loan-create' book.pk %}" class="btn btn-primary">Loan</a>
+    {% endif %}
     {% if perms.catalog.can_mark_returned %}
     <a href="{% url 'book-update' book.pk %}" class="btn btn-link">Edit</a>
     {% endif %}
