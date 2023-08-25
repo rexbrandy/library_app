@@ -18,4 +18,5 @@ Basic Library application built using Django.
     - Build My Loans page (Maybe this should just be apart of the User page).
     - return functionality 
     - loan sorting and searching
+    - Add loan return function
 

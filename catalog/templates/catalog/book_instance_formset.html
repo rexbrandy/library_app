@@ -1,4 +1,4 @@
-<table class="table table-hover table-borderless caption-top" style="padding-left: 12;" id='bookInstaneTable'>
+<table class="table table-hover table-borderless caption-top" style="padding-left: 12;" id='bookInstanceTable'>
     <caption class="h5" style="font-weight: normal;">Book copies</caption>
     <thead>
     <tr>
@@ -7,14 +7,17 @@
         <th scope="col">Delete</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id='bookInstanceTableBody'>
     {{ book_instance_formset.management_form }}
     {% load widget_tweaks %}
     {% for book_instance_form in book_instance_formset %}
     <tr id='book_instance_tr_{{ forloop.counter }}'>
-        <th scope="row">{{ book_instance_form.id.value }}</th>
+        <th scope="row">
+          {{ book_instance_form.id.value }}
+          {% render_field book_instance_form.id hidden=True %}
+        </th>
         <td>
-          {% render_field book_instance_form.id hidden=True %}              
+                        
           {% if book_instance_form.status.value == 'o' %}
             {% render_field book_instance_form.status hidden=True %}              
             {% render_field book_instance_form.status class='form-control' disabled=True %}
@@ -42,11 +45,50 @@
 {% block scripts %}
 <script>
   function addBookInstance() {
-    total_forms = document.getElementById('id_form-TOTAL_FORMS');
-    my_table = document.getElementById('bookInstanceTable');
-    row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
+    let total_forms = document.getElementById('id_form-TOTAL_FORMS');
+    let number_rows = parseInt(total_forms.value)-1
+    
 
-    console.log(row);
+    let my_table = document.getElementById('bookInstanceTableBody');
+
+    let row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
+    my_table.appendChild(row)
+
+    console.log(document.getElementById("id_form-"+number_rows+"-id"));
+
+    // update ids - for some reason django renders 2 fields here
+    let id1 = document.getElementById("id_form-"+number_rows+"-id");
+    let id2 = document.getElementById("initial-form-"+number_rows+"-id_form-"+number_rows+"-id");
+
+    // update status
+    let status = document.getElementById("id_form-"+number_rows+"-status");
+
+    // update delete
+    let status = document.getElementById("id_form-"+number_rows+"-DELETE");
+
+    
+
+
+    /*
+    console.log(total_forms.value)
+
+    let row = my_table.insertRow(parseInt(total_forms.value)+1);
+
+    let c1 = row.insertCell(0);
+    let c2 = row.insertCell(1);
+    let c3 = row.insertCell(2);
+
+    c1.innerText = "test"
+    c2.innerText = "test"
+    c3.innerText = "test"
+
+    total_forms.value = parseInt(total_forms.value)+1;
+    */
   }
+
+  function getBookInstanceData() {
+
+  }
+
 </script>
 {% endblock %}
