@@ -46,19 +46,22 @@
           </li>
           {% if perms.catalog.can_mark_returned %}
             <li class="nav-item">
-              <a href="{% url 'all-loans' %}" class="nav-link text-white fs-5">Admin</a>
+              <a href="" class="nav-link text-white fs-5">Admin</a>
               <ul class="nav flex-column mb-auto" style="">
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
-                  <a href="" class="nav-link text-white">Add Book</a>
+                  <a href="{% url 'loan-create' %}" class="nav-link text-white">Loan Book</a>
                 </li>
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
-                  <a href="" class="nav-link text-white">Add Author</a>
+                  <a href="{% url 'book-create' %}" class="nav-link text-white">Add Book</a>
+                </li>
+                <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
+                  <a href="{% url 'author-create' %}" class="nav-link text-white">Add Author</a>
                 </li>
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
                   <a href="" class="nav-link text-white">Users</a>
                 </li>
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
-                  <a href="" class="nav-link text-white">Loans</a>
+                  <a href="{% url 'all-loans' %}" class="nav-link text-white">Loans</a>
                 </li>
               </ul>
             </li>

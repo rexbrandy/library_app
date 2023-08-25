@@ -4,7 +4,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from catalog.models import Loan, User, BookInstance
+from catalog.models import Loan, Book, BookInstance
+from django.contrib.auth.models import User
 
 class RenewBookForm(forms.ModelForm):
     def clean_due_back(self):
@@ -26,6 +27,10 @@ class RenewBookForm(forms.ModelForm):
 
 
 class LoanForm(forms.Form):
-    class Meta:
-        model = Loan
-        fields = ['user', 'book_instance']
+    user = forms.ModelChoiceField(queryset=User.objects.all())
+    book = forms.ModelChoiceField(queryset=Book.objects.filter(
+        pk__in=BookInstance.objects.filter(status__exact='a').distinct().values_list('book'))
+    )
+
+
+    

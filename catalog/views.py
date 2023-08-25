@@ -10,6 +10,7 @@ from django.forms import modelformset_factory
 
 from .forms import RenewBookForm, LoanForm
 from .models import Book, BookInstance, Author, Loan
+# from django.contrib.auth.models import User
 
 def index(request):
     num_books = Book.objects.all().count()
@@ -102,19 +103,6 @@ class LoanCreate(LoginRequiredMixin, generic.edit.CreateView):
     model = Loan
     fields = ['user', 'book_instance']
 
-    def get_context_data(self, **kwargs):
-        book_pk = self.kwargs['book_pk']
-
-        context = super().get_context_data()
-        book = Book.objects.get(pk=book_pk)
-
-        if book.is_available():
-            book_instance = book.get_available_copy()
-            print(book_instance.pk)
-
-        return context
-
-
 class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     model = Loan
     template_name = 'catalog/borrowed_books.html'
@@ -135,9 +123,24 @@ class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
 
     template_name = 'catalog/all_borrowed_books.html'
 
+@login_required
+@permission_required('catalog.can_mark_returned', raise_exception=True)
 def loan_create(request):
     if request.method == 'POST':
         form = LoanForm(request.POST)
+
+        if form.is_valid():
+            book_instance = form.cleaned_data['book'].get_available_copy()
+            loaner = form.cleaned_data['user']
+
+            loan = Loan(user=loaner, book_instance=book_instance)
+            loan.save()
+
+            return HttpResponseRedirect(reverse('all-loans'))
+    else:
+        form = LoanForm()
+
+    return render(request, 'catalog/loan_form.html', context={'form': form})
 
 
 @login_required
