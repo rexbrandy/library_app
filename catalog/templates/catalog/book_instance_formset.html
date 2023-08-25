@@ -46,49 +46,39 @@
 <script>
   function addBookInstance() {
     let total_forms = document.getElementById('id_form-TOTAL_FORMS');
-    let number_rows = parseInt(total_forms.value)-1
-    
+    let number_rows = parseInt(total_forms.value)-1;
+    let row_number = parseInt(total_forms.value)+1;
+    let id_number = total_forms.value;
 
-    let my_table = document.getElementById('bookInstanceTableBody');
+    var my_table = document.getElementById('bookInstanceTableBody');
 
-    let row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
-    my_table.appendChild(row)
+    var row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
+    row.id = 'book_instance_tr_'+row_number;
 
-    console.log(document.getElementById("id_form-"+number_rows+"-id"));
+    console.log("TEST");
 
-    // update ids - for some reason django renders 2 fields here
-    let id1 = document.getElementById("id_form-"+number_rows+"-id");
-    let id2 = document.getElementById("initial-form-"+number_rows+"-id_form-"+number_rows+"-id");
+    var id_1 = row.querySelector("#id_form-"+number_rows+"-id");
+    id_1.id = "id_form-"+id_number+"-id";
+    id_1.name = "form-"+id_number+"-id";
+
+    var id_2 = row.querySelector("#initial-form-"+number_rows+"-id_form-"+number_rows+"-id");
+    id_2.id = "initial-form-"+id_number+"-id_form-"+id_number+"-id";
+    id_2.name = "initial-form-"+id_number+"-id";
 
     // update status
-    let status = document.getElementById("id_form-"+number_rows+"-status");
+    var status_dropdown = row.querySelector("#id_form-"+number_rows+"-status");
+    status_dropdown.id = "id_form-"+id_number+"-status";
+    status_dropdown.name = "form-"+id_number+"-status";
 
     // update delete
-    let status = document.getElementById("id_form-"+number_rows+"-DELETE");
+    var delete_button = document.getElementById("#id_form-"+number_rows+"-DELETE");
+    delete_button.id = "id_form-"+id_number+"-DELETE";
+    delete_button.name = "form-"+id_number+"-DELETE";
 
-    
+    console.log("TEST");
 
-
-    /*
-    console.log(total_forms.value)
-
-    let row = my_table.insertRow(parseInt(total_forms.value)+1);
-
-    let c1 = row.insertCell(0);
-    let c2 = row.insertCell(1);
-    let c3 = row.insertCell(2);
-
-    c1.innerText = "test"
-    c2.innerText = "test"
-    c3.innerText = "test"
-
-    total_forms.value = parseInt(total_forms.value)+1;
-    */
+    my_table.appendChild(row);
+    total_forms.value = number_rows;
   }
-
-  function getBookInstanceData() {
-
-  }
-
 </script>
 {% endblock %}
