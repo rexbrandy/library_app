@@ -53,7 +53,6 @@ class BookUpdate(generic.edit.UpdateView):
         BookInstanceFormset = modelformset_factory(BookInstance, extra=0, can_delete=True, fields=['status', 'id'])
 
         context['book_instance_formset'] = BookInstanceFormset(queryset=book_instances_qs)
-
         return context
 
     def post(self, request, **kwargs):

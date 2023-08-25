@@ -35,7 +35,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td><button type="button" class="btn btn-link" onclick="addBookInstance()">Add new row</button></td>
+        <td><button type="button" class="btn btn-link" onclick="addBookInstance({{ book.id }})">Add new row</button></td>
         <td></td>
         <td><input class="btn btn-primary" type="submit" value="Save changes"></td>
     </tr>
@@ -55,8 +55,7 @@
     var row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
     row.id = 'book_instance_tr_'+row_number;
 
-    console.log("TEST");
-
+    // update ids
     var id_1 = row.querySelector("#id_form-"+number_rows+"-id");
     id_1.id = "id_form-"+id_number+"-id";
     id_1.name = "form-"+id_number+"-id";
@@ -71,14 +70,16 @@
     status_dropdown.name = "form-"+id_number+"-status";
 
     // update delete
-    var delete_button = document.getElementById("#id_form-"+number_rows+"-DELETE");
+    var delete_button = row.querySelector("#id_form-"+number_rows+"-DELETE");
     delete_button.id = "id_form-"+id_number+"-DELETE";
     delete_button.name = "form-"+id_number+"-DELETE";
-
-    console.log("TEST");
-
+  
     my_table.appendChild(row);
     total_forms.value = number_rows;
+  }
+  
+  function getNewInstaceID(book_id) {
+    // ajax call to create new row in db and get uuid
   }
 </script>
 {% endblock %}
