@@ -12,12 +12,11 @@
     {% load widget_tweaks %}
     {% for book_instance_form in book_instance_formset %}
     <tr id='book_instance_tr_{{ forloop.counter }}'>
-        <th scope="row">
+        <td scope="row" class='book_instance_id_{{ forloop.counter }}'>
           {{ book_instance_form.id.value }}
-          {% render_field book_instance_form.id hidden=True %}
         </th>
         <td>
-                        
+          {% render_field book_instance_form.id hidden=True %}              
           {% if book_instance_form.status.value == 'o' %}
             {% render_field book_instance_form.status hidden=True %}              
             {% render_field book_instance_form.status class='form-control' disabled=True %}
@@ -44,21 +43,28 @@
 
 {% block scripts %}
 <script>
-  function addBookInstance() {
+  function addBookInstance(book_id) {
     let total_forms = document.getElementById('id_form-TOTAL_FORMS');
     let number_rows = parseInt(total_forms.value)-1;
     let row_number = parseInt(total_forms.value)+1;
     let id_number = total_forms.value;
+
+    var new_book_id = getNewInstanceID(book_id);
+
+    console.log(new_book_id)
 
     var my_table = document.getElementById('bookInstanceTableBody');
 
     var row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
     row.id = 'book_instance_tr_'+row_number;
 
+    row.children[0].innerHTML = new_book_id;
+
     // update ids
     var id_1 = row.querySelector("#id_form-"+number_rows+"-id");
     id_1.id = "id_form-"+id_number+"-id";
     id_1.name = "form-"+id_number+"-id";
+    id_1.value = new_book_id
 
     var id_2 = row.querySelector("#initial-form-"+number_rows+"-id_form-"+number_rows+"-id");
     id_2.id = "initial-form-"+id_number+"-id_form-"+id_number+"-id";
@@ -78,8 +84,27 @@
     total_forms.value = number_rows;
   }
   
-  function getNewInstaceID(book_id) {
+  function getNewInstanceID(book_id) {
+    var new_book_id;
     // ajax call to create new row in db and get uuid
+    $.ajax({
+      type: 'POST',
+      async: false,
+      url: "{% url 'book-instance-create' %}",
+      data: {
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'book_id': book_id
+      },
+      success: function(response){
+        console.log(response.new_book_id)
+        new_book_id = response.new_book_id;
+      },
+      error: function(response){
+        console.log(response);
+      },
+    })
+
+    return new_book_id;
   }
 </script>
 {% endblock %}

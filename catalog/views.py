@@ -3,7 +3,7 @@ import datetime
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse, reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import modelformset_factory
@@ -166,3 +166,19 @@ def renew_loan_librarian(request, pk):
     }
 
     return render(request, 'catalog/book_renew_librarian.html', context=context)
+
+
+#############
+# AJAX VIEWS
+#
+
+def add_book_instance_ajax(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+        try: 
+            book = Book.objects.get(pk=request.POST['book_id'])
+            new_book_instance = BookInstance(book=book)
+
+            return JsonResponse({'new_book_id': new_book_instance.pk}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': e.pk}, status=400)
+    return JsonResponse({'error': 'unknown'}, status=400)
