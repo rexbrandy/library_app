@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import modelformset_factory
 
-from .forms import RenewBookForm, LoanForm
+from .forms import RenewBookForm, LoanForms_TEST
 from .models import Book, BookInstance, Author, Loan
 # from django.contrib.auth.models import User
 
@@ -84,7 +84,7 @@ class AuthorDetailView(generic.DetailView):
 
 class AuthorCreate(generic.edit.CreateView):
     model = Author
-    fields = ['first_name', 'last_name', 'date_of_birth']
+    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death', 'bio']
 
 class AuthorUpdate(generic.edit.UpdateView):
     model = Author
@@ -98,9 +98,6 @@ class AuthorDelete(generic.edit.DeleteView):
 ##############
 # LOAN VIEWS 
 #
-class LoanCreate(LoginRequiredMixin, generic.edit.CreateView):
-    model = Loan
-    fields = ['user', 'book_instance']
 
 class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     model = Loan
@@ -126,7 +123,7 @@ class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
 @permission_required('catalog.can_mark_returned', raise_exception=True)
 def loan_create(request):
     if request.method == 'POST':
-        form = LoanForm(request.POST)
+        form = LoanForms_TEST(request.POST)
 
         if form.is_valid():
             book_instance = form.cleaned_data['book'].get_available_copy()
@@ -137,14 +134,14 @@ def loan_create(request):
 
             return HttpResponseRedirect(reverse('all-loans'))
     else:
-        form = LoanForm()
+        form = LoanForms_TEST()
 
     return render(request, 'catalog/loan_form.html', context={'form': form})
 
 
 @login_required
 @permission_required('catalog.can_mark_returned', raise_exception=True)
-def renew_loan_librarian(request, pk):
+def renew_loan(request, pk):
     loan = get_object_or_404(Loan, pk=pk)
 
     if request.method == 'POST':
@@ -167,11 +164,16 @@ def renew_loan_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', context=context)
 
+def return_loan(request, pk):
+    loan = get_object_or_404(Loan, pk)
+
 
 #############
 # AJAX VIEWS
 #
 
+@login_required
+@permission_required('catalog.can_mark_returned', raise_exception=True)
 def add_book_instance_ajax(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
         try: 

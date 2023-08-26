@@ -115,7 +115,7 @@ class BookInstance(models.Model):
     )
 
     def __str__(self):
-        return f'{self.book.title} ({self.id}))'
+        return f'{self.book.title} ({self.id})'
 
     def display_book_title(self):
         return self.book.title

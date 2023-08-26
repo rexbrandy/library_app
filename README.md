@@ -5,7 +5,8 @@ Basic Library application built using Django.
 - General
     - Add search functionality
     - Add a User page so that staff can click on a user profile and see all the borrowed books a user has.
-    - Build  tests
+    - Build  tests.
+    - Author Country field might need to become a model choice like language.
 
 - Author
     - Decide how Author section should be built: as seperate page or BookListView with view limited to Author

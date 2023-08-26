@@ -26,7 +26,7 @@ class RenewBookForm(forms.ModelForm):
         help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 1)')}
 
 
-class LoanForm(forms.Form):
+class LoanForms_TEST(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
     book = forms.ModelChoiceField(queryset=Book.objects.filter(
         pk__in=BookInstance.objects.filter(status__exact='a').distinct().values_list('book'))

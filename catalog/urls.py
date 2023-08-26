@@ -19,10 +19,8 @@ urlpatterns = [
     path('author/<int:pk>/delete', views.AuthorDelete.as_view(), name='author-delete'),
 
     path('loan/my_loans/', views.LoanedBooksByUserListView.as_view(), name='my-loans'),
-    path('loan/<int:pk>/renew/', views.renew_loan_librarian, name='renew-loan-librarian'),
+    path('loan/<int:pk>/renew/', views.renew_loan, name='loan-renew'),
     path('loan/all_loans/', views.LoanedBooksByAllListView.as_view(), name='all-loans'),
-    path('loan/create/', views.LoanCreate.as_view(), name='loan-create'),
-    path('loan/create-new/', views.loan_create, name='loan-create-new'),
-
+    path('loan/create/', views.loan_create, name='loan-create'),
 
 ]
