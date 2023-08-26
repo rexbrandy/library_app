@@ -177,6 +177,7 @@ def add_book_instance_ajax(request):
         try: 
             book = Book.objects.get(pk=request.POST['book_id'])
             new_book_instance = BookInstance(book=book)
+            new_book_instance.save()
 
             return JsonResponse({'new_book_id': new_book_instance.pk}, status=200)
         except Exception as e:

@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
+{% block page_heading %}{{ author.first_name }} {{ author.last_name }}{% endblock %}
+
 {% block content %}
-<h1>{{ author.first_name }} {{ author.last_name }}</h1>
+<div class="row">
+  <div class="col-12"></div>
+</div>
 <p><strong>Born:</strong> {{ author.date_of_birth }}</p>
 <br/>
 <div style="margin-left:20px;margin-top:20px">

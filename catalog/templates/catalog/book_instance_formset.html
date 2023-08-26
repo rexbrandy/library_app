@@ -51,8 +51,6 @@
 
     var new_book_id = getNewInstanceID(book_id);
 
-    console.log(new_book_id)
-
     var my_table = document.getElementById('bookInstanceTableBody');
 
     var row = document.getElementById('book_instance_tr_'+total_forms.value).cloneNode(true);
@@ -81,7 +79,7 @@
     delete_button.name = "form-"+id_number+"-DELETE";
   
     my_table.appendChild(row);
-    total_forms.value = number_rows;
+    total_forms.value = row_number;
   }
   
   function getNewInstanceID(book_id) {
@@ -96,7 +94,6 @@
         'book_id': book_id
       },
       success: function(response){
-        console.log(response.new_book_id)
         new_book_id = response.new_book_id;
       },
       error: function(response){

@@ -30,6 +30,11 @@ class Author(models.Model):
     country = models.CharField(max_length=50, null=True, blank=True)
     date_of_birth = models.DateField('Born', null=True, blank=True, help_text='Enter Author date of birth.')
     date_of_death = models.DateField('Died', null=True, blank=True, help_text='Enter Author date of death.')
+    bio = models.TextField(
+        max_length=1000,
+        help_text='Enter author bio',
+        null=True
+    )
 
     class Meta:
         ordering = ['last_name', 'first_name']
