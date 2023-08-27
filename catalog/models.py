@@ -13,7 +13,6 @@ class Language(models.Model):
     name = models.CharField(max_length=64, help_text='Enter language name e.g. English')
 
     def __str__(self):
-        
         return f'({self.language_code}) {self.name}'
 
 class Genre(models.Model):
@@ -97,7 +96,7 @@ class Book(models.Model):
 
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
+    book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=False)
 
     LOAN_STATUS = (
         ('m', 'Maintence'),
