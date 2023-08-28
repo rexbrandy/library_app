@@ -4,20 +4,32 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-12"></div>
+  <div class="col-12">
+    <p><strong>Born:</strong> {{ author.date_of_birth }}</p>
+    <p><strong>Died:</strong> {{ author.date_of_death }}</p>
+    <p>{{ author.bio }}</p>
+  </div>
 </div>
-<p><strong>Born:</strong> {{ author.date_of_birth }}</p>
-<br/>
-<div style="margin-left:20px;margin-top:20px">
-  <h3>Books</h3>
-  {% for book in author.book_set.all %}
-    <hr/>
-    <p>
-      <a href="{{ book.get_absolute_url }}"><strong>{{ book.title }}</strong></a>
-      <span class="text-muted"><small>Genre: {{ book.genre.all|join:", " }}</small></span>
-    </p>
-    <p>Copies Available: {{ book.bookinstance_set.all.count }}</p>
-  {% endfor %}
+<div class="row">
+  <div class="col-9">
+    <h3>Books</h3>
+    {% for book in author.book_set.all %}
+      <hr/>
+      <div class='row'>
+        {% load static %}
+        <div class="col-3">
+          <a href="{{ book.get_absolute_url }}" style="max-width: inherit;"><img src="{% static 'assets/book_placeholder.png'%}" style="max-width: inherit;"></a>
+        </div>
+        <div class="col-9">
+            <a href="{{ book.get_absolute_url }}" style="text-decoration: none; color: #000;"><strong>{{ book.title }}</strong></a>
+            <span class="text-muted"><small>Genre: {{ book.genre.all|join:", " }}</small></span>
+            <br/>
+            Copies Available: {{ book.bookinstance_set.all.count }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>
+
 
 {% endblock %}

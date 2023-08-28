@@ -1,4 +1,6 @@
+from cProfile import label
 import datetime
+from pyexpat import model
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -25,8 +27,15 @@ class RenewBookForm(forms.ModelForm):
         labels = {'due_back': _('Renewal date')}
         help_texts = {'due_back': _('Enter a date between now and 4 weeks (default 1)')}
 
+class ReturnBookForm(forms.ModelForm):
+    class Meta:
+        model = Loan
+        fields = ['returned_date']    
+        labels = {'returned_date': _('Date returned')}
+        help_texts = {'returned_date': _('Enter the date the book was returned (YYYY-MM-DD)')}
 
-class LoanForms_TEST(forms.Form):
+
+class LoanForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
     book = forms.ModelChoiceField(queryset=Book.objects.filter(
         pk__in=BookInstance.objects.filter(status__exact='a').distinct().values_list('book'))

@@ -17,6 +17,11 @@
               -
               <a class="link" href="{{ book.author.get_absolute_url }}" style="color: rgb(90, 90, 90);"><small>{{ book.author }}</small></a>
             </h5>
+            {% if book.copies_available > 0 %}
+            <h6 class="card-subtitle">Copies Available: {{ book.copies_available }}</h6>
+            {% else %}
+            <h6 class="card-subtitle">No Copies Available</h6>
+            {% endif %}
             <p class="card-text" style="max-height: 60%;">
               {{ book.summary|slice:":200" }}...
             </p>

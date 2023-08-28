@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
 
+    path('profile/', views.user_detail, name='profile'),
+
     path('books/', views.BookListView.as_view(), name='books'),
     path('book/<int:pk>', views.BookDetailView.as_view(), name='book-detail'),   
     path('book/create', views.BookCreate.as_view(), name='book-create'),
@@ -20,6 +22,7 @@ urlpatterns = [
 
     path('loan/my_loans/', views.LoanedBooksByUserListView.as_view(), name='my-loans'),
     path('loan/<int:pk>/renew/', views.renew_loan, name='loan-renew'),
+    path('loan/<int:pk>/return/', views.return_loan, name='loan-return'),
     path('loan/all_loans/', views.LoanedBooksByAllListView.as_view(), name='all-loans'),
     path('loan/create/', views.loan_create, name='loan-create'),
 

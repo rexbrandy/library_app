@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block page_heading %}{{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-9">
+    <h5>Current Loans</h5>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Book</th>
+          <th scope="col">Due back</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loan_list %}
+        {% if loan.is_overdue %}
+        <tr class="table-danger">
+        {% else %}
+        <tr>
+        {% endif %}
+          <td>{{ loan.book_instance.book.title }}</td>
+          <td>{{ loan.due_back }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if has_returned_loans %}
+<div class="row">
+  <div class="col-9">
+    <h5>Past Loans</h5>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Book</th>
+          <th scope="col">Returned</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loan_list_returned %}
+        {% if loan.is_overdue %}
+        <tr class="table-danger">
+        {% else %}
+        <tr>
+        {% endif %}
+          <td>{{ loan.book_instance.book.title }}</td>
+          <td>{{ loan.returned_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

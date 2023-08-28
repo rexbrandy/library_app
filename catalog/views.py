@@ -1,4 +1,6 @@
 import datetime
+from multiprocessing import context
+import re
 
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
@@ -7,10 +9,12 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import modelformset_factory
+from django.utils import timezone as django_timezone
 
-from .forms import RenewBookForm, LoanForms_TEST
+from .forms import RenewBookForm, LoanForm, ReturnBookForm
 from .models import Book, BookInstance, Author, Loan
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
+
 
 def index(request):
     num_books = Book.objects.all().count()
@@ -27,6 +31,29 @@ def index(request):
     }
 
     return render(request, 'index.html', context=context)
+
+
+##############
+# USER VIEWS
+#
+class UserDetailView(LoginRequiredMixin, generic.DetailView):
+    model = User
+
+@login_required
+def user_detail(request):
+    user = request.user
+    loans = Loan.objects.filter(user=user)
+    returned_loans = Loan.objects.filter(user=user).filter(returned_date__isnull=True)
+
+    has_past_loans = (True if Loan.objects.filter(user=user).filter(returned_date__isnull=True).count() > 0 else False)
+
+    context = {
+        'has_past_loans': has_past_loans,
+        'loan_list': loans
+    }
+
+    return render(request, 'catalog/user_detail.html', context=context)
+
 
 ##############
 # BOOK VIEWS
@@ -123,18 +150,19 @@ class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
 @permission_required('catalog.can_mark_returned', raise_exception=True)
 def loan_create(request):
     if request.method == 'POST':
-        form = LoanForms_TEST(request.POST)
+        form = LoanForm(request.POST)
 
         if form.is_valid():
             book_instance = form.cleaned_data['book'].get_available_copy()
             loaner = form.cleaned_data['user']
 
             loan = Loan(user=loaner, book_instance=book_instance)
+            book_instance.set_on_loan()
             loan.save()
 
             return HttpResponseRedirect(reverse('all-loans'))
     else:
-        form = LoanForms_TEST()
+        form = LoanForm()
 
     return render(request, 'catalog/loan_form.html', context={'form': form})
 
@@ -164,8 +192,26 @@ def renew_loan(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', context=context)
 
+@login_required
+@permission_required('catalog.can_mark_returned', raise_exception=True)
 def return_loan(request, pk):
-    loan = get_object_or_404(Loan, pk)
+    loan = get_object_or_404(Loan, pk=pk)
+
+    if request.method == 'POST':
+        form = ReturnBookForm(request.POST)
+
+        if form.is_valid():
+            loan.returned_date = form.cleaned_data['returned_date']
+            loan.save()
+
+            return HttpResponseRedirect(reverse('all-loans'))
+    else:
+        form=ReturnBookForm(initial={'returned_date': django_timezone.now()})
+
+    return render(request, 'catalog/loan_return.html', {'form': form})
+
+
+
 
 
 #############

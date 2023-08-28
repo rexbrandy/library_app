@@ -20,11 +20,11 @@
     <tr>
     {% endif %}
       <td>{{ loan.user.username }}</td>
-      <td>{{ loan.book_instance.book.title }}</td>
+      <td><a class="link "href="{{ loan.book_instance.book.get_absolute_url }}">{{ loan.book_instance.book.title }}</a></td>
       <td>{{ loan.due_back }}</td>
       <td>
         <a class='btn btn-link ' href="{% url 'loan-renew' loan.id %}">Renew</a>
-        <a class='btn btn-link ' href="{% url 'renew-loan-librarian' loan.id %}">Return</a>
+        <a class='btn btn-link ' href="{% url 'loan-return' loan.id %}">Return</a>
       </td>
     </tr>
     {% endfor %}

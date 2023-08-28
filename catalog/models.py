@@ -75,6 +75,11 @@ class Book(models.Model):
     )
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True, help_text="Select book language")
 
+    def save(self, *args, **kwargs):
+        super(Book, self).save(*args, **kwargs)
+        if BookInstance.objects.filter(book=self.pk).count() == 0:
+            BookInstance.objects.create(book=self.pk)
+
     def __str__(self):
         return self.title
 
@@ -126,6 +131,11 @@ class BookInstance(models.Model):
             ('a', 'Available'),
             ('r', 'Reserved'),
         )
+    
+    def set_on_loan(self):
+        self.status = 'o'
+        self.save(update_fields=['status'])
+        print(self.status)
 
 class Loan(models.Model):
     book_instance = models.OneToOneField(BookInstance, on_delete=models.RESTRICT)
