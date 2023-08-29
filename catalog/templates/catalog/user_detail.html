@@ -5,12 +5,11 @@
 {% block content %}
 <div class="row">
   <div class="col-9">
-    <h5>Current Loans</h5>
-    <table class="table table-striped">
+    <table class="table table-borderless table-hover">
       <thead>
         <tr>
-          <th scope="col">Book</th>
-          <th scope="col">Due back</th>
+          <th scope="col"><h5>Current Loans</h5></th>
+          <th scope="col"><h6>Due back</h6></th>
         </tr>
       </thead>
       <tbody>
@@ -29,15 +28,14 @@
   </div>
 </div>
 
-{% if has_returned_loans %}
+{% if has_past_loans %}
 <div class="row">
-  <div class="col-9">
-    <h5>Past Loans</h5>
-    <table class="table table-striped">
+  <div class="col-9">    
+    <table class="table table-borderless table-hover">
       <thead>
         <tr>
-          <th scope="col">Book</th>
-          <th scope="col">Returned</th>
+          <th scope="col"><h5>Past Loans</h5></th>
+          <th scope="col"><h6>Returned</h6></th>
         </tr>
       </thead>
       <tbody>

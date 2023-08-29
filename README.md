@@ -7,7 +7,11 @@ Basic Library application built using Django.
     - Build  tests.
     - Author Country field might need to become a model choice like language.
     - Fix table population scripts (Genre, Languages)
-    - Fix Sidebar
+    - Fix Sidebar.
+    - Add wishlist.
+
+- Author
+    - rebuild author form
 
 - Book
     - Add loaner name to book instance section.

@@ -17,3 +17,7 @@ body {
     text-decoration: none;
     color: black;
 }
+
+.loan-table-cell {
+    padding-top: 15px;
+}

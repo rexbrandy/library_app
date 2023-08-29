@@ -42,14 +42,17 @@ class UserDetailView(LoginRequiredMixin, generic.DetailView):
 @login_required
 def user_detail(request):
     user = request.user
-    loans = Loan.objects.filter(user=user)
-    returned_loans = Loan.objects.filter(user=user).filter(returned_date__isnull=True)
+    loans = Loan.objects.filter(user=user).filter(returned_date__isnull=True)
+    returned_loans = Loan.objects.filter(user=user).filter(returned_date__isnull=False)
 
-    has_past_loans = (True if Loan.objects.filter(user=user).filter(returned_date__isnull=True).count() > 0 else False)
+    has_past_loans = (True if Loan.objects.filter(user=user).filter(returned_date__isnull=False).count() > 0 else False)
+
+    print(returned_loans)
 
     context = {
         'has_past_loans': has_past_loans,
-        'loan_list': loans
+        'loan_list': loans,
+        'loan_list_returned': returned_loans
     }
 
     return render(request, 'catalog/user_detail.html', context=context)
@@ -146,6 +149,11 @@ class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
 
     template_name = 'catalog/all_borrowed_books.html'
 
+    def get_queryset(self):
+        return (
+            Loan.objects.filter(returned_date__isnull=True)
+        )
+
 @login_required
 @permission_required('catalog.can_mark_returned', raise_exception=True)
 def loan_create(request):
@@ -208,10 +216,12 @@ def return_loan(request, pk):
     else:
         form=ReturnBookForm(initial={'returned_date': django_timezone.now()})
 
-    return render(request, 'catalog/loan_return.html', {'form': form})
+    context = {
+        'form': form,
+        'loan': loan
+    }
 
-
-
+    return render(request, 'catalog/loan_return.html', context=context)
 
 
 #############

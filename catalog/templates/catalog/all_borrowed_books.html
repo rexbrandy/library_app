@@ -3,11 +3,11 @@
 {% block page_heading %}All Loans{% endblock %}
 
 {% block content %}
-<table class="table table-striped">
+<table class="table table-borderless table-hover">
   <thead>
     <tr>
-      <th scope="col">User</th>
       <th scope="col">Book</th>
+      <th scope="col">User</th>
       <th scope="col">Due back</th>
       <th scope="col">Actions</th>
     </tr>
@@ -19,9 +19,13 @@
     {% else %}
     <tr>
     {% endif %}
-      <td>{{ loan.user.username }}</td>
-      <td><a class="link "href="{{ loan.book_instance.book.get_absolute_url }}">{{ loan.book_instance.book.title }}</a></td>
-      <td>{{ loan.due_back }}</td>
+      <td style="padding-top: 15px;">
+        <a style="text-decoration: none; color: #000;" href="{{ loan.book_instance.book.get_absolute_url }}">
+          <h6>{{ loan.book_instance.book.title }}</h6>
+        </a>
+      </td>
+      <td style="padding-top: 15px;">{{ loan.user.username }}</td>
+      <td style="padding-top: 15px;">{{ loan.due_back }}</td>
       <td>
         <a class='btn btn-link ' href="{% url 'loan-renew' loan.id %}">Renew</a>
         <a class='btn btn-link ' href="{% url 'loan-return' loan.id %}">Return</a>

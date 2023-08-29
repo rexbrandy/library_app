@@ -40,6 +40,11 @@
         <hr>
 
         <ul class="nav flex-column mb-auto">
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a href="{% url 'profile' %}" class="nav-link text-white fs-5">Profile</a>
+          </li>
+          {% endif %}
           <li class="nav-item">
             <a href="{% url 'books' %}" class="nav-link text-white fs-5">Books</a>
           </li>
@@ -74,10 +79,11 @@
 
         <ul class="nav flex-column">
         {% if user.is_authenticated %}
-          <li class="nav-item">User: {{ user.get_username }}</li>
-          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link text-white fs-5">Logout</a></li>
-          <li class="nav-item"><a href="{% url 'my-loans' %}" class="nav-link text-white fs-5">Borrowed</a></li>
-
+          <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link text-white fs-5">
+              Logout
+            </a>
+          </li>
         {% else %}
           <li class="nav-item"><a href="{% url 'login' %}" class="nav-link text-white fs-5" >Login</a></li>
         {% endif %}

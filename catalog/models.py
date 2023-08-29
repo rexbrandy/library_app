@@ -157,9 +157,6 @@ class Loan(models.Model):
     def __str__(self):
         return f'{self.book_instance.book.title} - {self.user.username}'
 
-    def set_returned_to_now(self):
-        if not self.returned_date:
-            self.returned_date = datetime.date.today()
-
     class Meta:
         permissions = (('can_mark_returned', 'Set loan as returned'),)
+        ordering = ['due_back']
