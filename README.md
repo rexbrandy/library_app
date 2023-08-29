@@ -13,7 +13,7 @@ Basic Library application built using Django.
 
 - Loan
     - loan sorting and searching
-    - User isnt allowed to loan same book twice
+    - User shouldnt allowed to loan same book twice
 
 - Misc
     - Author Country field might need to become a model choice like language.
