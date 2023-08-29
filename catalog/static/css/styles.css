@@ -21,3 +21,8 @@ body {
 .loan-table-cell {
     padding-top: 15px;
 }
+
+.search-container {
+    margin: auto;
+    display: block;
+}

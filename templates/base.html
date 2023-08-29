@@ -49,8 +49,8 @@
           {% if perms.catalog.can_mark_returned %}
             <li class="nav-item dropdown">
               <a href="#" id='adminDropdown' class="dropdown-button nav-link text-white fs-5">
-                <span>Admin</span>
                 <i class="bi bi-list"></i>
+                <span>Admin</span>
               </a>
               <ul class="nav flex-column mb-auto dropdown-container" id='adminDropdownList'>
                 <li class="nav-item" style="background-color: #343a40; padding-left: 10px;">
@@ -91,8 +91,16 @@
 
       <div class="container" style="margin-left: 200px;">    
         <div class="row">
-          <div class="col-12">
+          <div class="col-9">
             <h1 class="display-1"><strong>{% block page_heading %}{% endblock %}</strong></h1>
+          </div>
+          <div class="col-3 search-container">
+            <form action="{% url 'search' %}" method="post" role='search'>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search for book" aria-label="Search for book" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+              </div>
+            </form>
           </div>
         </div>
 

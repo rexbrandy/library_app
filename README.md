@@ -5,9 +5,7 @@ Basic Library application built using Django.
 - General
     - Add search functionality
     - Build  tests.
-
-- Author
-    - rebuild author form
+    - Sign up page.
 
 - Book
     - Add loaner name to book instance section.

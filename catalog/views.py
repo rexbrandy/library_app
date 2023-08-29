@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.forms import modelformset_factory
 from django.utils import timezone as django_timezone
 
-from .forms import RenewBookForm, LoanForm, ReturnBookForm
+from .forms import RenewBookForm, LoanForm, ReturnBookForm, SearchForm
 from .models import Book, BookInstance, Author, Loan
 from django.contrib.auth.models import User
 
@@ -32,6 +32,19 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
+def search(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_input = form.cleaned_data['search']
+
+            results = Book.objects.filter(title__contains=search_input)
+            return render(request, 'search.html', {'results': results})
+        else: 
+            return render(request, 'search.html')
+    else: 
+        return render(request, 'search.html')
+
 
 ##############
 # USER VIEWS
@@ -46,8 +59,6 @@ def user_detail(request):
     returned_loans = Loan.objects.filter(user=user).filter(returned_date__isnull=False)
 
     has_past_loans = (True if Loan.objects.filter(user=user).filter(returned_date__isnull=False).count() > 0 else False)
-
-    print(returned_loans)
 
     context = {
         'has_past_loans': has_past_loans,
