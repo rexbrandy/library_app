@@ -5,10 +5,6 @@ Basic Library application built using Django.
 - General
     - Add search functionality
     - Build  tests.
-    - Author Country field might need to become a model choice like language.
-    - Fix table population scripts (Genre, Languages)
-    - Fix Sidebar.
-    - Add wishlist.
 
 - Author
     - rebuild author form
@@ -18,6 +14,10 @@ Basic Library application built using Django.
     - Book instance is added to bottom row but on reload is moved to the top.
 
 - Loan
-    - return functionality 
     - loan sorting and searching
     - User isnt allowed to loan same book twice
+
+- Misc
+    - Author Country field might need to become a model choice like language.
+    - Fix table population scripts (Genre, Languages)
+    - Add wishlist.
