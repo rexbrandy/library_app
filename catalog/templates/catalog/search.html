@@ -15,6 +15,7 @@
   <div class="col-9">
       <a href="{{ book.get_absolute_url }}" style="text-decoration: none; color: #000;"><strong>{{ book.title }}</strong></a>
       <span class="text-muted"><small>Genre: {{ book.genre.all|join:", " }}</small></span>
+      <p>{{ book.summary }}</p>
       <br/>
       Copies Available: {{ book.bookinstance_set.all.count }}
   </div>
