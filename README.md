@@ -1,6 +1,6 @@
 # Project Name
 
-A brief description of your project.
+This is a small Library app built as a small exercise on Django. This project was mainly for the purposes of research and learning.
 
 ## Table of Contents
 
@@ -9,7 +9,8 @@ A brief description of your project.
 
 ## About
 
-This is a small Library app built as a small exercise on Django. This project was mainly for the purposes of research and learning.
+
+Most of the code in this project comes from the [MDN Django tutorial](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Tutorial_local_library_website).
 
 ## Getting Started
 
@@ -28,7 +29,6 @@ $ python manage.py runserver
 
 ## TODO
 - General
-    - Add search functionality
     - Build  tests.
     - Sign up page.
 
