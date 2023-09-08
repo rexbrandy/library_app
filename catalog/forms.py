@@ -1,7 +1,5 @@
-from cProfile import label
 import datetime
-from pyexpat import model
-from tkinter import Widget
+import re
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -54,5 +52,27 @@ class LoanForm(forms.Form):
         pk__in=BookInstance.objects.filter(status__exact='a').distinct().values_list('book'))
     )
 
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
 
-    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        password = cleaned_data.get('password')
+        confirm_password = confirm_password.get('password')
+
+        password_length_pattern = "{8,}" # Password must be 8 char long
+
+        if password != confirm_password:
+            self.add_error('confirm_password', 'Passwords do not match')
+
+        if not re.match(password_length_pattern, password):
+            self.add_error('password', 'Password must be 8 characters long')
+
+
+
+        

@@ -52,8 +52,10 @@ def search(request):
 ##############
 # USER VIEWS
 #
-class UserDetailView(LoginRequiredMixin, generic.DetailView):
+
+class UserCreateView(generic.CreateView):
     model = User
+    fields = ['username', 'email', 'password']
 
 @login_required
 def user_detail(request):
