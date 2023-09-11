@@ -11,7 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.forms import modelformset_factory
 from django.utils import timezone as django_timezone
 
-from .forms import RenewBookForm, LoanForm, ReturnBookForm, SearchForm
+from .forms import RenewBookForm, LoanForm, ReturnBookForm, SearchForm, UserForm
+
 from .models import Book, BookInstance, Author, Loan
 from django.contrib.auth.models import User
 
@@ -53,9 +54,28 @@ def search(request):
 # USER VIEWS
 #
 
-class UserCreateView(generic.CreateView):
-    model = User
-    fields = ['username', 'email', 'password']
+class UserCreateView(generic.FormView):
+    template_name = 'registration/register.html'
+    form_class = UserForm
+    success_url = '/accounts/login/'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+def user_register(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+
+        if form.is_valid():
+
+            return HttpResponseRedirect(reverse('login'))
+    else:
+        form = UserForm()
+
+    return render(request, 'catalog/loan_form.html', context={'form': form})
+
+
 
 @login_required
 def user_detail(request):

@@ -63,14 +63,12 @@ class UserForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
         password = cleaned_data.get('password')
-        confirm_password = confirm_password.get('password')
-
-        password_length_pattern = "{8,}" # Password must be 8 char long
+        confirm_password = cleaned_data.get('password')
 
         if password != confirm_password:
             self.add_error('confirm_password', 'Passwords do not match')
 
-        if not re.match(password_length_pattern, password):
+        if len(password) < 8:
             self.add_error('password', 'Password must be 8 characters long')
 
 
