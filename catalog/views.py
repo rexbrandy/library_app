@@ -53,27 +53,20 @@ def search(request):
 ##############
 # USER VIEWS
 #
-
-class UserCreateView(generic.FormView):
-    template_name = 'registration/register.html'
-    form_class = UserForm
-    success_url = '/accounts/login/'
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
 def user_register(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
 
         if form.is_valid():
+            User.objects.create_user(username=form.cleaned_data['username'],
+                                     email=form.cleaned_data['email'],
+                                     password=form.cleaned_data['password'])
 
             return HttpResponseRedirect(reverse('login'))
     else:
         form = UserForm()
 
-    return render(request, 'catalog/loan_form.html', context={'form': form})
+    return render(request, 'registration/register.html', context={'form': form})
 
 
 

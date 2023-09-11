@@ -8,7 +8,9 @@ This is a small Library app built as a small exercise on Django. This project wa
 - [Getting Started](#getting-started)
 
 ## About
-
+This is a small library application project.
+In this app a User is able to join the library and view the books and authors available.
+Staff members are able to add/edit books and authors, loan books to users and view all loans outstanding or otherwise.
 
 Most of the code in this project comes from the [MDN Django tutorial](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Tutorial_local_library_website).
 
@@ -30,7 +32,6 @@ $ python manage.py runserver
 ## TODO
 - General
     - Build  tests.
-    - Sign up page.
 
 - Book
     - Add loaner name to book instance section.
@@ -44,3 +45,4 @@ $ python manage.py runserver
     - Author Country field might need to become a model choice like language.
     - Fix table population scripts (Genre, Languages)
     - Add wishlist.
+    - show error message if no loans on account page.

@@ -7,7 +7,7 @@ urlpatterns = [
     path('search/', views.search, name='search'),
 
     path('account/', views.user_detail, name='account'),
-    path('accounts/register/', views.UserCreateView.as_view(), name='register'),
+    path('accounts/register/', views.user_register, name='register'),
 
     path('books/', views.BookListView.as_view(), name='books'),
     path('book/<int:pk>', views.BookDetailView.as_view(), name='book-detail'),   
