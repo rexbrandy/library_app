@@ -45,4 +45,3 @@ $ python manage.py runserver
     - Author Country field might need to become a model choice like language.
     - Fix table population scripts (Genre, Languages)
     - Add wishlist.
-    - show error message if no loans on account page.

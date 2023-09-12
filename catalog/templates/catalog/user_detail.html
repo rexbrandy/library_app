@@ -3,6 +3,7 @@
 {% block page_heading %}{{ user.username }}{% endblock %}
 
 {% block content %}
+{% if loan_list %}
 <div class="row">
   <div class="col-9">
     <table class="table table-borderless table-hover">
@@ -27,6 +28,14 @@
     </table>
   </div>
 </div>
+
+{% else %}
+<div class="row">
+  <div class="col-9">
+    <h2>No past loans</h2>
+  </div>
+</div>
+{% endif %}
 
 {% if has_past_loans %}
 <div class="row">
