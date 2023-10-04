@@ -214,7 +214,7 @@ def renew_loan(request, pk):
 
         if form.is_valid():
             # if submitted form is valid we update the due date with the clean form data
-            loan.due_back = form.cleaned_data['renewal_date']
+            loan.due_back = form.cleaned_data['due_back']
             loan.save()
 
             return HttpResponseRedirect(reverse('all-loans'))
