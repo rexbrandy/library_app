@@ -78,7 +78,7 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         super(Book, self).save(*args, **kwargs)
         if BookInstance.objects.filter(book=self.pk).count() == 0:
-            BookInstance.objects.create(book=self.pk)
+            BookInstance.objects.create(book=self)
 
     def __str__(self):
         return self.title

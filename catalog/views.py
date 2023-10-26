@@ -101,6 +101,11 @@ class BookCreate(generic.edit.CreateView):
     model = Book
     fields = '__all__'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['heading'] = 'Create Book'
+        return context
+
 class BookUpdate(generic.edit.UpdateView):
     model = Book
     fields = '__all__'
@@ -112,6 +117,7 @@ class BookUpdate(generic.edit.UpdateView):
         BookInstanceFormset = modelformset_factory(BookInstance, extra=0, can_delete=True, fields=['status', 'id'])
 
         context['book_instance_formset'] = BookInstanceFormset(queryset=book_instances_qs)
+        context['heading'] = 'Update Book'
         return context
 
     def post(self, request, **kwargs):
@@ -145,9 +151,19 @@ class AuthorCreate(generic.edit.CreateView):
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death', 'bio']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['heading'] = 'Create Author'
+        return context
+
 class AuthorUpdate(generic.edit.UpdateView):
     model = Author
     fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['heading'] = 'Update Author'
+        return context
 
 class AuthorDelete(generic.edit.DeleteView):
     model = Author

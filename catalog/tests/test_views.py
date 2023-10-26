@@ -1,4 +1,5 @@
 import datetime
+import sys
 
 from urllib import response
 from django.test import TestCase
@@ -17,6 +18,9 @@ class AuthorListViewTest(TestCase):
             Author.objects.create(
                 first_name = f'Mary {author_id}',
                 last_name = f'Jane {author_id}',
+                country = 'Australia',
+                date_of_birth = datetime.datetime.now(),
+                date_of_death = datetime.datetime.now(),
             )
     
     def test_view_url_exists(self):
@@ -56,7 +60,14 @@ class LoanedBooksByUserListViewTest(TestCase):
         test_user1.save()
         test_user2.save()
 
-        test_author = Author.objects.create(first_name='John', last_name='Smith')
+        test_author = Author.objects.create(
+            first_name = 'Mary',
+            last_name = 'Jane',
+            country = 'Australia',
+            date_of_birth = datetime.datetime.now(),
+            date_of_death = datetime.datetime.now(),
+        )
+
         test_genre = Genre.objects.create(name='Fantasy')
         test_language = Language.objects.create(name='English')
         test_book = Book.objects.create(
@@ -71,6 +82,7 @@ class LoanedBooksByUserListViewTest(TestCase):
         test_book.save()
 
         number_of_copies = 30
+        
         for book_copy in range(number_of_copies):
             book_instance = BookInstance.objects.create(
                 book=test_book,
@@ -86,6 +98,7 @@ class LoanedBooksByUserListViewTest(TestCase):
                 book_instance = book_instance,
                 due_back = due_back
             )
+        
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('my-loans'))
@@ -98,4 +111,3 @@ class LoanedBooksByUserListViewTest(TestCase):
         self.assertEqual(str(response.context['user']), 'testuser1')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'catalog/borrowed_books.html')
-    
