@@ -1,4 +1,4 @@
-# Project Name
+# Django Library Application
 
 This is a small Library app built as a small exercise on Django. This project was mainly for the purposes of research and learning.
 
