@@ -1,3 +1,4 @@
+from cgi import test
 from dataclasses import field
 from django.test import TestCase
 
@@ -75,3 +76,46 @@ class BookModelTest(TestCase):
     def test_bookinstance_creates_default(self):
         book = Book.objects.get(id=1)
         self.assertTrue(len(book.bookinstance_set.all()) == 1)
+
+class BookInstanceModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.author = Author.objects.create(first_name='Mary', last_name='Jane')
+        cls.genre = Genre.objects.create(name='Fantasy')
+        test_book = Book.objects.create(
+            title='Book Title',
+            summary='My book summary',
+            author=cls.author,
+        )
+
+        genre_objects_for_book = Genre.objects.all()
+        test_book.genre.set(genre_objects_for_book)
+
+        BookInstance.objects.create(
+            book=test_book,
+            status='m'
+        )
+
+    def test_status_help_text(self):
+        book_instance = BookInstance.objects.last()
+        help_text = book_instance._meta.get_field('status').help_text
+        self.assertEqual(help_text, 'Book Availability')
+
+    def test_status_choices(self):
+        book_instance = BookInstance.objects.last()
+        choices = book_instance._meta.get_field('status').choices
+        self.assertEqual(choices, (
+            ('m', 'Maintence'),
+            ('o', 'On loan'),
+            ('a', 'Available'),
+            ('r', 'Reserved'),
+        ))
+
+    def test_set_default_status(self):
+        book_instance = BookInstance.objects.last()
+        self.assertTrue(book_instance.status == 'm')
+
+    def test_set_on_loan(self):
+        book_instance = BookInstance.objects.last()
+        book_instance.set_on_loan()
+        self.assertTrue(book_instance.status == 'o')
