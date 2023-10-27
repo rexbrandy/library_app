@@ -1,7 +1,9 @@
 from cgi import test
 from dataclasses import field
+import datetime
 from django.test import TestCase
 
+from django.contrib.auth.models import User
 from catalog.models import Author, Book, BookInstance, Loan, Language, Genre
 
 class AuthorModelTest(TestCase):
@@ -119,3 +121,50 @@ class BookInstanceModelTest(TestCase):
         book_instance = BookInstance.objects.last()
         book_instance.set_on_loan()
         self.assertTrue(book_instance.status == 'o')
+
+class LoanModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.author = Author.objects.create(first_name='Mary', last_name='Jane')
+        cls.genre = Genre.objects.create(name='Fantasy')
+        test_book = Book.objects.create(
+            title='Book Title',
+            summary='My book summary',
+            author=cls.author,
+        )
+        test_user = User.objects.create_user(
+            username='testuser1', 
+            password='G00d_Pass'
+        )
+
+        test_book_instance = BookInstance.objects.last()
+
+        Loan.objects.create(
+            book_instance = test_book_instance,
+            user = test_user,
+        )
+
+    def test_date_is_now(self):
+        loan = Loan.objects.get(id=1)
+        self.assertEqual(loan.date, datetime.date.today())
+
+    def test_date_help_text(self):
+        loan = Loan.objects.get(id=1)
+        date = loan._meta.get_field('date').help_text
+        self.assertEqual(date, 'Date borrowed')
+
+    def test_due_back_date(self):
+        loan = Loan.objects.get(id=1)
+        self.assertEqual(loan.due_back, datetime.date.today()+ + datetime.timedelta(30))
+
+    def test_due_back_help_text(self):
+        loan = Loan.objects.get(id=1)
+        due_back = loan._meta.get_field('due_back').help_text
+        self.assertEqual(due_back, 'Date due to be returned')
+
+    def test_returned_date_help_text(self):
+        loan = Loan.objects.get(id=1)
+        date = loan._meta.get_field('returned_date').help_text
+        self.assertEqual(date, 'Date book was returned')
+
+
