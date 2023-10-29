@@ -98,8 +98,8 @@
             <form action="{% url 'search' %}" method="post" role='search'>
               {% csrf_token %}
               <div class="input-group mb-3">
-                <input name='search' id='search' type="text" class="form-control" placeholder="Search for book" aria-label="Search for book" aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="button" id="">Search</button>
+                <input name='search' id='search' type="text" class="form-control" placeholder="Search for book" aria-label="Search for book" aria-describedby="button-addon2" required>
+                <button class="btn btn-outline-secondary" type="submit" id="">Search</button>
               </div>
             </form>
           </div>

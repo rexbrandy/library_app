@@ -1,13 +1,100 @@
+from collections import deque
 import datetime
-import sys
 
-from urllib import response
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone as django_timezone
 
 from django.contrib.auth.models import User
 from catalog.models import Loan, Author, Book, BookInstance, Genre, Language
+
+class IndexViewTest(TestCase):
+    def test_view_url_exists(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        pass
+
+class SearchViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        test_author = Author.objects.create(first_name='Mary', last_name='Jane')
+        Book.objects.create(
+            title='Book Title',
+            summary='My book summary',
+            author=test_author,
+        )
+
+    def test_view_url_exists(self):
+        response = self.client.get('/search/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_book_search(self):
+        response = self.client.post('/search/', 
+            data={'search': 'Book Title'}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.context['search_results']) > 0)
+
+    def test_view_uses_correct_template(self):
+        pass
+
+    def test_author_search(self):
+        pass
+
+class AccountViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        test_user = User.objects.create_user(username='testuser1', password='G00d_Pass')
+        test_author = Author.objects.create(
+            first_name = 'Mary',
+            last_name = 'Jane',
+            country = 'Australia',
+            date_of_birth = datetime.datetime.now(),
+            date_of_death = datetime.datetime.now(),
+        )
+
+        test_book = Book.objects.create(
+            title='Book Title',
+            summary='My book summary',
+            author=test_author,
+        )
+        
+        test_book_instance = BookInstance.objects.create(book=test_book)
+        test_returned_book_instance = BookInstance.objects.create(book=test_book)
+
+        Loan.objects.create(
+            book_instance = test_book_instance,
+            user = test_user
+        )
+
+        Loan.objects.create(
+            book_instance = test_returned_book_instance,
+            user = test_user,
+            due_back = django_timezone.now() - datetime.timedelta(30), 
+            returned_date = django_timezone.now() - datetime.timedelta(1)
+        )
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('account'))
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, '/accounts/login/?next=/account/')
+
+    def test_loaned_books_appear(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get(reverse('account'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.context['loan_list']) > 0)
+
+    def test_returned_books_appear(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get(reverse('account'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.context['loan_list_returned']) > 0)
+
+    def test_view_uses_correct_template(self):
+        pass
 
 class AuthorListViewTest(TestCase):
     @classmethod
@@ -51,7 +138,7 @@ class AuthorListViewTest(TestCase):
         self.assertEqual(len(response.context['author_list']), 3)
 
 
-
+# OLD
 class LoanedBooksByUserListViewTest(TestCase):
     def setUp(self):
         test_user1 = User.objects.create_user(username='testuser1', password='G00d_Pass')
@@ -96,13 +183,14 @@ class LoanedBooksByUserListViewTest(TestCase):
             Loan.objects.create(
                 user = borrower,
                 book_instance = book_instance,
-                due_back = due_back
+                due_back = due_back,
+
             )
         
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('my-loans'))
-        self.assertRedirects(response, '/accounts/login/?next=/my_loans/')
+        self.assertRedirects(response, '/accounts/login/?next=/loan/all_loans/')
 
     def test_logged_in_uses_correct_template(self):
         login = self.client.login(username='testuser1', password='G00d_Pass')

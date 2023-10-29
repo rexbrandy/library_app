@@ -36,13 +36,10 @@ def index(request):
 def search(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
-        print(request.POST)
-        print('1')
         if form.is_valid():
             search_input = form.cleaned_data['search']
 
             results = Book.objects.filter(title__contains=search_input)
-            print(results)
             return render(request, 'catalog/search.html', {'search_results': results})
         else: 
             return render(request, 'catalog/search.html')
