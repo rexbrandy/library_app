@@ -41,3 +41,4 @@ $ python manage.py runserver
     - Author Country field might need to become a model choice like language.
     - Fix table population scripts (Genre, Languages)
     - Add wishlist.
+    - Fix `................/Users/yeliab/Projects/library_app/env/lib/python3.9/site-packages/django/views/generic/list.py:91: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'catalog.models.Book'> QuerySet.`

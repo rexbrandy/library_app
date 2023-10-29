@@ -1,7 +1,4 @@
-from collections import deque
 import datetime
-import numbers
-from urllib import response
 
 from django.test import TestCase
 from django.urls import reverse
@@ -115,7 +112,6 @@ class AccountViewTest(TestCase):
 
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('account'))
-        self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, '/accounts/login/?next=/account/')
 
     def test_loaned_books_appear(self):
@@ -131,6 +127,25 @@ class AccountViewTest(TestCase):
         self.assertTrue(len(response.context['loan_list_returned']) > 0)
 
 
+class AccountCreateViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        pass
+
+    def test_accessible_by_name(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('register'))
+        self.assertTemplateUsed(response, 'registration/register.html')
+
+    def test_accessible_by_name(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+
+
 class BookListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -141,13 +156,8 @@ class BookListViewTest(TestCase):
             last_name = 'Jane',
         )
 
-        test_book = Book.objects.create(
-            title='Book Title',
-            summary='My book summary',
-            author=test_author,
-        )
 
-        for i in number_of_books:
+        for i in range(number_of_books):
             Book.objects.create(
                 title=f'Book {i}',
                 summary=f'Test Book Number {i}',
@@ -178,7 +188,33 @@ class BookListViewTest(TestCase):
         
 
 class BookDetailViewTest(TestCase):
-    pass
+    @classmethod
+    def setUpTestData(cls):
+        test_author = Author.objects.create(
+            first_name='Mary',
+            last_name='Jane'
+        )
+        Book.objects.create(
+            title='Test Book',
+            summary='This is a test book',
+            author=test_author
+        )
+
+    def test_view_url_exists(self):
+        book = Book.objects.last()
+        response = self.client.get(f'/book/{book.id}')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        book = Book.objects.last()
+        response = self.client.get(reverse('book-detail', kwargs={'pk': book.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        book = Book.objects.last()
+        response = self.client.get(f'/book/{book.id}')
+        self.assertTemplateUsed(response, 'catalog/book_detail.html')
+
 
 class BookCreateViewTest(TestCase):
     pass
@@ -229,6 +265,7 @@ class AuthorListViewTest(TestCase):
 
 
 # OLD
+'''
 class LoanedBooksByUserListViewTest(TestCase):
     def setUp(self):
         test_user1 = User.objects.create_user(username='testuser1', password='G00d_Pass')
@@ -289,3 +326,4 @@ class LoanedBooksByUserListViewTest(TestCase):
         self.assertEqual(str(response.context['user']), 'testuser1')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'catalog/borrowed_books.html')
+'''
