@@ -1,5 +1,7 @@
 from collections import deque
 import datetime
+import numbers
+from urllib import response
 
 from django.test import TestCase
 from django.urls import reverse
@@ -14,7 +16,14 @@ class IndexViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        pass
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'index.html')
+
+    def test_accessible_by_name(self):
+        response = self.client.get(reverse('index'))
+        self.assertEqual(response.status_code, 200)
+
 
 class SearchViewTest(TestCase):
     @classmethod
@@ -30,6 +39,10 @@ class SearchViewTest(TestCase):
         response = self.client.get('/search/')
         self.assertEqual(response.status_code, 200)
 
+    def test_accessible_by_name(self):
+        response = self.client.get(reverse('search'))
+        self.assertEqual(response.status_code, 200)
+
     def test_book_search(self):
         response = self.client.post('/search/', 
             data={'search': 'Book Title'}
@@ -38,7 +51,8 @@ class SearchViewTest(TestCase):
         self.assertTrue(len(response.context['search_results']) > 0)
 
     def test_view_uses_correct_template(self):
-        pass
+        response = self.client.get('/search/')
+        self.assertTemplateUsed(response, 'catalog/search.html')
 
     def test_author_search(self):
         pass
@@ -76,6 +90,29 @@ class AccountViewTest(TestCase):
             returned_date = django_timezone.now() - datetime.timedelta(1)
         )
 
+    def test_view_url_exists(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get('/account/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get(reverse('account'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get(reverse('account'))
+
+        self.assertEqual(str(response.context['user']), 'testuser1')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'catalog/user_detail.html')
+
+    def test_accessible_by_name(self):
+        login = self.client.login(username='testuser1', password='G00d_Pass')
+        response = self.client.get(reverse('account'))
+        self.assertEqual(response.status_code, 200)
+
     def test_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('account'))
         self.assertEqual(response.status_code, 200)
@@ -93,8 +130,61 @@ class AccountViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.context['loan_list_returned']) > 0)
 
+
+class BookListViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        number_of_books = 13
+
+        test_author = Author.objects.create(
+            first_name = 'Mary',
+            last_name = 'Jane',
+        )
+
+        test_book = Book.objects.create(
+            title='Book Title',
+            summary='My book summary',
+            author=test_author,
+        )
+
+        for i in number_of_books:
+            Book.objects.create(
+                title=f'Book {i}',
+                summary=f'Test Book Number {i}',
+                author=test_author
+            )
+        
+    def test_view_url_exists(self):
+        response = self.client.get('/books/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        response = self.client.get(reverse('books'))
+        self.assertEqual(response.status_code, 200)
+
     def test_view_uses_correct_template(self):
-        pass
+        response = self.client.get('/books/')
+        self.assertTemplateUsed(response, 'catalog/book_list.html')
+
+    def test_view_pagination_is_ten(self):
+        response = self.client.get('/books/')
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertEqual(len(response.context['book_list']), 10)
+        
+    def test_view_correct_number_displaying(self):
+        response = self.client.get('/books/'+'?page=2')
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertEqual(len(response.context['book_list']), 3)
+        
+
+class BookDetailViewTest(TestCase):
+    pass
+
+class BookCreateViewTest(TestCase):
+    pass
+
+class BookDeleteViewTest(TestCase):
+    pass
 
 class AuthorListViewTest(TestCase):
     @classmethod
