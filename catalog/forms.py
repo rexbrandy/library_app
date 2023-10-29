@@ -43,9 +43,6 @@ class ReturnBookForm(forms.ModelForm):
             )
         }
 
-class SearchForm(forms.Form):
-    search = forms.CharField()
-
 class LoanForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
     book = forms.ModelChoiceField(queryset=Book.objects.filter(

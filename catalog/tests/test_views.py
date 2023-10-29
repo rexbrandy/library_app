@@ -156,7 +156,6 @@ class BookListViewTest(TestCase):
             last_name = 'Jane',
         )
 
-
         for i in range(number_of_books):
             Book.objects.create(
                 title=f'Book {i}',
@@ -184,8 +183,7 @@ class BookListViewTest(TestCase):
     def test_view_correct_number_displaying(self):
         response = self.client.get('/books/'+'?page=2')
         self.assertTrue(response.context['is_paginated'] == True)
-        self.assertEqual(len(response.context['book_list']), 3)
-        
+        self.assertEqual(len(response.context['book_list']), 3)      
 
 class BookDetailViewTest(TestCase):
     @classmethod
@@ -217,10 +215,76 @@ class BookDetailViewTest(TestCase):
 
 
 class BookCreateViewTest(TestCase):
-    pass
+    def test_view_url_exists(self):
+        response = self.client.get(f'/book/create')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        response = self.client.get(reverse('book-create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(f'/book/create')
+        self.assertTemplateUsed(response, 'catalog/book_form.html')
+
+
+class BookUpdateViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        test_author = Author.objects.create(
+            first_name='Mary',
+            last_name='Jane'
+        )
+        Book.objects.create(
+            title='Test Book',
+            summary='This is a test book',
+            author=test_author
+        )
+
+    def test_view_url_exists(self):
+        book = Book.objects.last()
+        response = self.client.get(f'/book/{book.id}/update')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        book = Book.objects.last()
+        response = self.client.get(reverse('book-update', kwargs={'pk': book.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        book = Book.objects.last()
+        response = self.client.get(f'/book/{book.id}/update')
+        self.assertTemplateUsed(response, 'catalog/book_form.html')
+
 
 class BookDeleteViewTest(TestCase):
-    pass
+    @classmethod
+    def setUpTestData(cls):
+        test_author = Author.objects.create(
+            first_name='Mary',
+            last_name='Jane'
+        )
+        Book.objects.create(
+            title='Test Book',
+            summary='This is a test book',
+            author=test_author
+        )
+
+    def test_view_url_exists(self):
+        book = Book.objects.last()
+        response = self.client.get(f'/book/{book.id}/delete')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        book = Book.objects.last()
+        response = self.client.get(reverse('book-delete', kwargs={'pk': book.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        book = Book.objects.last()
+        response = self.client.get(f'/book/{book.id}/delete')
+        self.assertTemplateUsed(response, 'catalog/book_confirm_delete.html')
+
 
 class AuthorListViewTest(TestCase):
     @classmethod
@@ -263,6 +327,107 @@ class AuthorListViewTest(TestCase):
         self.assertTrue(response.context['is_paginated'] == True)
         self.assertEqual(len(response.context['author_list']), 3)
 
+class AuthorDetailViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Author.objects.create(
+            first_name='Mary',
+            last_name='Jane'
+        )
+
+    def test_view_url_exists(self):
+        author = Author.objects.last()
+        response = self.client.get(f'/author/{author.id}')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        author = Author.objects.last()
+        response = self.client.get(reverse('author-detail', kwargs={'pk': author.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        author = Author.objects.last()
+        response = self.client.get(f'/author/{author.id}')
+        self.assertTemplateUsed(response, 'catalog/author_detail.html')
+
+
+class AuthorCreatelViewTest(TestCase):
+    def test_view_url_exists(self):
+        response = self.client.get(f'/author/create')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        response = self.client.get(reverse('author-create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(f'/author/create')
+        self.assertTemplateUsed(response, 'catalog/author_form.html')
+
+
+class AuthorUpdateViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Author.objects.create(
+            first_name='Mary',
+            last_name='Jane'
+        )
+
+    def test_view_url_exists(self):
+        author = Author.objects.last()
+        response = self.client.get(f'/author/{author.id}/update')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        author = Author.objects.last()
+        response = self.client.get(reverse('author-update', kwargs={'pk': author.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        author = Author.objects.last()
+        response = self.client.get(f'/author/{author.id}/update')
+        self.assertTemplateUsed(response, 'catalog/author_form.html')
+
+
+class AuthorDeleteViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Author.objects.create(
+            first_name='Mary',
+            last_name='Jane'
+        )
+
+    def test_view_url_exists(self):
+        author = Author.objects.last()
+        response = self.client.get(f'/author/{author.id}/delete')
+        self.assertEqual(response.status_code, 200)
+
+    def test_accessible_by_name(self):
+        author = Author.objects.last()
+        response = self.client.get(reverse('author-delete', kwargs={'pk': author.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        author = Author.objects.last()
+        response = self.client.get(f'/author/{author.id}/delete')
+        self.assertTemplateUsed(response, 'catalog/author_confirm_delete.html')
+
+
+
+class LoanListViewTest(TestCase):
+    pass
+
+class LoanDetailViewTest(TestCase):
+    pass
+
+class LoanCreatelViewTest(TestCase):
+    pass
+
+class LoanUpdateViewTest(TestCase):
+    pass
+
+class LoanReturnViewTest(TestCase):
+    pass
 
 # OLD
 '''
