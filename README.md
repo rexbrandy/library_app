@@ -5,8 +5,9 @@ It provides a user friendly interface for librarians to manage there library res
 
 ## Table of Contents
 
-- [About](#about)
-- [Getting Started](#getting-started)
+- [Features](#features)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
 
 ## Features
 
