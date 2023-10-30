@@ -413,25 +413,7 @@ class AuthorDeleteViewTest(TestCase):
         self.assertTemplateUsed(response, 'catalog/author_confirm_delete.html')
 
 
-
 class LoanListViewTest(TestCase):
-    pass
-
-class LoanDetailViewTest(TestCase):
-    pass
-
-class LoanCreatelViewTest(TestCase):
-    pass
-
-class LoanUpdateViewTest(TestCase):
-    pass
-
-class LoanReturnViewTest(TestCase):
-    pass
-
-# OLD
-'''
-class LoanedBooksByUserListViewTest(TestCase):
     def setUp(self):
         test_user1 = User.objects.create_user(username='testuser1', password='G00d_Pass')
         test_user2 = User.objects.create_user(username='testuser2', password='G00d_Pass')
@@ -481,14 +463,28 @@ class LoanedBooksByUserListViewTest(TestCase):
         
 
     def test_redirect_if_not_logged_in(self):
-        response = self.client.get(reverse('my-loans'))
+        response = self.client.get(reverse('all-loans'))
         self.assertRedirects(response, '/accounts/login/?next=/loan/all_loans/')
 
     def test_logged_in_uses_correct_template(self):
         login = self.client.login(username='testuser1', password='G00d_Pass')
-        response = self.client.get(reverse('my-loans'))
+        response = self.client.get(reverse('all-loans'))
 
         self.assertEqual(str(response.context['user']), 'testuser1')
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'catalog/borrowed_books.html')
-'''
+        self.assertTemplateUsed(response, 'catalog/all_borrowed_books.html')
+
+    def test_view_pagination_is_ten(self):
+        response = self.client.get('/loan/all_loans')
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertEqual(len(response.context['book_list']), 10)
+        
+
+class LoanCreatelViewTest(TestCase):
+    pass
+
+class LoanUpdateViewTest(TestCase):
+    pass
+
+class LoanReturnViewTest(TestCase):
+    pass

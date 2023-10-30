@@ -170,19 +170,6 @@ class AuthorDelete(generic.edit.DeleteView):
 ##############
 # LOAN VIEWS 
 #
-
-class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
-    model = Loan
-    template_name = 'catalog/borrowed_books.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return (
-            Loan.objects.filter(user=self.request.user)
-            .filter(returned_date__isnull=True)
-        )
-
-
 class LoanedBooksByAllListView(PermissionRequiredMixin, generic.ListView):
     permission_required = 'catalog.can_mark_returned'
 

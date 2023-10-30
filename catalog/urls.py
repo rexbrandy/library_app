@@ -26,10 +26,8 @@ urlpatterns = [
     path('author/<int:pk>/delete', views.AuthorDelete.as_view(), name='author-delete'),
 
     # Loans
-    path('loan/my_loans/', views.LoanedBooksByUserListView.as_view(), name='my-loans'),
     path('loan/<int:pk>/renew/', views.renew_loan, name='loan-renew'),
     path('loan/<int:pk>/return/', views.return_loan, name='loan-return'),
     path('loan/all_loans/', views.LoanedBooksByAllListView.as_view(), name='all-loans'),
     path('loan/create/', views.loan_create, name='loan-create'),
-
 ]
